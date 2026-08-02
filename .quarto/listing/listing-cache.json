@@ -1,0 +1,22 @@
+{
+  "listingMap": {
+    "projects/index.qmd": [
+      "project_1",
+      "project_2",
+      "pkg_1",
+      "pkg_2",
+      "KelpPolyphenols",
+      "MicrobiomeSimulations",
+      "SeaweedMicrobiomes",
+      "HardyWeinbergFilter",
+      "IsopodPopgen"
+    ],
+    "talks/index.qmd": [
+      "talk_1",
+      "talk_2"
+    ],
+    "blog.qmd": [
+      "blog"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+---
+title: "Author"
+image: profile.png
+about:
+  id: hero-heading
+  template: trestles
+  image-shape: rectangle
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com
+    - icon: github
+      text: Github
+      href: https://github.com
+---
+
+::: {#hero-heading}
+
+I'm William Pearman - at the moment I am a Research Fellow at the University of Auckland, working on host-microbe evolution questions, using simulations. However more broadly I am a molecular ecologist, working on a range of projects from whole genome sequencing and population genomics, eDNA, microbial ecology, and nanopore sequencing of recalcitrant species. 
+
+
+I did my PhD at the University of Otago, in Dunedin - New Zealand. My PhD focused on seaweed population genomics and microbiome structure - although I dabble in a variety of various other areas. 
+## Education 
+
+* University of Otago, Dunedin, New Zealand
+    *    PhD in Genetics/Marine Biology | 2023
+
+* Massey University, Auckland, New Zealand
+    *    Masters of Natural Science (Distinction) - speciality: Molecular Ecology | 2020
+    *    Bachelor of Natural Science - speciality: Molecular Ecology | 2018
+
+
+## Experience
+
+* Extensive experience in R - data visualization, analysis, eDNA/metabarcoding analysis, and simulation
+* Extensive command line bioinformatic experience - genome assembly, variant calling, metagenomic analysis
+* Project management
+* Scientific publishing
+
+
+## Service & Outreach
+* Peer review for:
+    * Journal of Phycology
+    * Journal of Biogeography
+    * Molecular Ecology
+    * Molecular Ecology Resources
+
+* Committee Member - University of Auckland Faculty of Science Reserach Fellow Society
+* Organizer - University of Auckland MicroGroup
+* Invited Speaker to science communication talks, All Saints Church - Birkenhead
+
+
+
+:::
+

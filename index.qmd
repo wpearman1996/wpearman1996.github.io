@@ -1,0 +1,29 @@
+---
+title: "Author"
+image: profile.png
+about:
+  id: hero-heading
+  template: trestles
+  image-shape: rectangle
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/WilliamPearman
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com
+    - icon: github
+      text: Github
+      href: https://github.com/wpearman1996
+---
+
+::: {#hero-heading}
+I'm William Pearman - at the moment I am a Research Fellow at the University of Auckland, working on host-microbe evolution questions, using simulations. However more broadly I am a molecular ecologist, working on a range of projects from whole genome sequencing and population genomics, eDNA, microbial ecology, and nanopore sequencing of recalcitrant species. 
+
+My research background is a combination of population genomics and microbial ecology, and thus my current research interests are in aligning these two fields to understand the evolution of ‘holobionts’ or host-microbiome units. At present, I use eco-evolutionary modelling to develop frameworks and hypotheses regarding holobiont evolution which can then be tested using existing datasets. In particular, my current research aims to understand how environmental variability shapes selection and evolution of host-microbe systems, whereby higher levels of environmental variability may result in increased selection for microbiome-mediated adaptation of the host. In addition to these areas, I am also actively involved in the application and optimisation of new molecular biology protocols for non-model organisms.
+
+**More than anything, I like solving problems. Most of my work to date has been focussed on interesting questions, or tricky problems - like why some species don't sequence so well with nanopore sequencing.**
+
+Feel free to get in touch if you want a copy of any of my publications, or if you're interested in collaborating.
+
+:::

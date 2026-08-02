@@ -1,0 +1,7 @@
+---
+title: "Seaweed Microbiomes"
+categories: [news, code, analysis]
+image: "image.jpg"
+---
+
+Here's some work i've done on seaweed microbiomes

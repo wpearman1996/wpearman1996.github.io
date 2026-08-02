@@ -1,0 +1,7 @@
+---
+title: "Hardy-Weinberg Filtering on Pop Gen Data"
+categories: [news, code, analysis]
+image: "image.jpg"
+---
+
+In this project I use EHR to explore the hospital transfers. 

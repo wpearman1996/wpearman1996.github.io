@@ -1,0 +1,9 @@
+---
+title: "Polyphenolic Inhibition of DNA sequencing"
+categories: [news, code, analysis]
+image: "image.jpg"
+---
+
+During my PhD I really struggled with doing some Nanopore sequencing of seaweeds - this seemed to be a pretty common issue, so I undertook to resolve this. I partnered with Nick Green in Chemistry at Otago to do some LC-MS of our DNA, and found strong evidence for polyphenol adducts in our DNA extracts. Here's the abstract:
+
+Genomic resources for macroalgae are increasingly important for conservation and commercial management, however the generation of such resources continues to be hampered by difficulties in the isolation of suitable DNA. Even when DNA has been isolated that otherwise appears high quality, such samples may not perform well during the sequencing process. We here compare Oxford Nanopore long-read sequencing results for three species of macroalgae to those of non-macroalgal species and find that macroalgal samples tend to lead to rapid decline in the number of available sequencing pores resulting in reduced sequencing yield. LC-MS analysis of macroalgal DNA that would be considered suitable for sequencing reveals that DNA derived from dried macroalgae is enriched for polyphenol-DNA adducts – which may lead to sequencing inhibition. Our findings have wide-ranging implications for the generation of genomic resources from macroalgae, for example long read sequencing of dried herbarium specimens, and suggest a need to use fresh tissue wherever possible for genome sequencing.
