@@ -1,9 +1,9 @@
 <!--
-Shared CV body, included by cv.qmd (HTML). The PDF (_cv-pdf.Rmd) uses the
-same content/cv_*.csv, content/pubs.csv, and content/cv_meta.yml sources
-via _common.R, but has its own body since vitae::twentyseconds needs a
-different structure (detailed_entries() tables, sidebar fields, etc.)
--- edit the content/ files, not this one.
+Shared CV body, included by cv.qmd (HTML). The PDFs (_cv-pagedown.Rmd,
+_cv-pagedown-onepage.Rmd) use the same content/cv_*.csv, content/pubs.csv,
+and content/cv_meta.yml sources via _common.R, but have their own body
+since pagedown's bootstrap-grid layout needs a different structure --
+edit the content/ files, not this one.
 -->
 
 ## Research Speciality

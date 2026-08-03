@@ -1,17 +1,10 @@
 /.quarto/
 
-# vitae::twentyseconds() copies these into the project root on every CV
-# render (copy_supporting_files()) -- not needed, we supply our own
-# patched twentysecondcv.cls and profile.jpg.
-/LICENSE
-/mariecurie.jpg
-
-# LaTeX/knitr build byproducts from rendering _cv-pdf.Rmd
-/cv.log
-/missfont.log
+# LaTeX/knitr build byproducts
 *.knit.md
 
-# pagedown::chrome_print byproducts from rendering _cv-pagedown.Rmd
+# pagedown::chrome_print byproducts from rendering _cv-pagedown*.Rmd
 # (favicon.ico is an empty placeholder -- see render_cv_pagedown.R)
 /_cv-pagedown.html
+/_cv-pagedown-onepage.html
 /favicon.ico

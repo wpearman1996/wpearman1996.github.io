@@ -45,8 +45,13 @@ load_pubs <- function() {
   pubs |> arrange(desc(index))
 }
 
+# Bold the CV owner's own name wherever it appears in an author list.
+bold_own_name <- function(authors, name = "Pearman, W.S.") {
+  gsub(name, glue("**{name}**"), authors, fixed = TRUE)
+}
+
 format_pub_citation <- function(pub) {
-  parts <- c(glue("{pub$authors}"))
+  authors_str <- bold_own_name(pub$authors)
   year_str <- glue("({pub$year}).")
   title_str <- glue("{pub$title}.")
   journal_str <- glue("*{pub$journal}*")
@@ -57,10 +62,10 @@ format_pub_citation <- function(pub) {
     journal_str <- glue("{journal_str}, {pub$pages}")
   }
   journal_str <- glue("{journal_str}.")
-  # Short link text: a full DOI as one unbroken token can overflow the
-  # printed page width (no natural break points for LaTeX to wrap on).
-  doi_str <- glue("[DOI](https://doi.org/{pub$doi})")
-  paste(pub$authors, year_str, title_str, journal_str, doi_str)
+  # Both CVs render via HTML/chrome_print now, so a full DOI can wrap
+  # normally -- no more LaTeX unbreakable-token overflow risk.
+  doi_str <- glue("[doi:{pub$doi}](https://doi.org/{pub$doi})")
+  paste(authors_str, year_str, title_str, journal_str, doi_str)
 }
 
 make_pub_list <- function(pubs) {
@@ -166,7 +171,7 @@ scholar_stats_line <- function() {
   glue::glue("{p$total_cites} citations | h-index: {p$h_index} | i10-index: {p$i10_index}")
 }
 
-# --- Tibbles for vitae::detailed_entries() (used by the twentyseconds PDF) ---
+# --- Tibbles used directly by _cv-pagedown*.Rmd ---
 
 education_tibble <- function() {
   readr::read_csv(here::here("content", "cv_education.csv"), show_col_types = FALSE) |>
