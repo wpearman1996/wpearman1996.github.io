@@ -21,22 +21,22 @@
     ]
   },
   {
-    "objectID": "about.html#education",
-    "href": "about.html#education",
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
     "title": "Author",
     "section": "",
-    "text": "University of Otago, Dunedin, New Zealand\n\nPhD in Genetics/Marine Biology | 2023\n\nMassey University, Auckland, New Zealand\n\nMasters of Natural Science (Distinction) - speciality: Molecular Ecology | 2020\nBachelor of Natural Science - speciality: Molecular Ecology | 2018",
+    "text": "Extensive experience in R - data visualization, analysis, eDNA/metabarcoding analysis, and simulation\nExtensive command line bioinformatic experience - genome assembly, variant calling, metagenomic analysis\nProject management\nScientific publishing",
     "crumbs": [
       "About",
       "About me"
     ]
   },
   {
-    "objectID": "about.html#experience",
-    "href": "about.html#experience",
+    "objectID": "about.html#service-outreach",
+    "href": "about.html#service-outreach",
     "title": "Author",
     "section": "",
-    "text": "Extensive experience in R - data visualization, analysis, eDNA/metabarcoding analysis, and simulation\nExtensive command line bioinformatic experience - genome assembly, variant calling, metagenomic analysis\nProject management\nScientific publishing",
+    "text": "Peer review for:\n\nJournal of Phycology\nJournal of Biogeography\nMolecular Ecology\nMolecular Ecology Resources\n\nCommittee Member - University of Auckland Faculty of Science Reserach Fellow Society\nOrganizer - University of Auckland MicroGroup\nInvited Speaker to science communication talks, All Saints Church - Birkenhead",
     "crumbs": [
       "About",
       "About me"
@@ -50,18 +50,21 @@
     "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "talks/talk_1/index.html",
-    "href": "talks/talk_1/index.html",
-    "title": "Building Website in R: Step by Step Introduction to blogdown",
+    "objectID": "talks/index.html",
+    "href": "talks/index.html",
+    "title": "Talks",
     "section": "",
-    "text": "Since this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "No matching items",
+    "crumbs": [
+      "Talks"
+    ]
   },
   {
-    "objectID": "projects/project_1/index.html",
-    "href": "projects/project_1/index.html",
-    "title": "project_1",
+    "objectID": "projects/MicrobiomeSimulations/index.html",
+    "href": "projects/MicrobiomeSimulations/index.html",
+    "title": "Holobiont Simulations",
     "section": "",
-    "text": "In this project I use EHR to explore the hospital transfers."
+    "text": "In this project I work on Machine Learning methods to predict in-hospital mortality."
   },
   {
     "objectID": "projects/index.html",
@@ -74,31 +77,42 @@
     ]
   },
   {
-    "objectID": "projects/index.html#grid-listing",
-    "href": "projects/index.html#grid-listing",
+    "objectID": "projects/index.html#research-projects",
+    "href": "projects/index.html#research-projects",
     "title": "Projects",
     "section": "",
-    "text": "This is an example of grid listing. You can specify the content in the yaml header in the .qmd file.\nIt is convenient to use id to link to multiple folders.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items",
+    "text": "No matching items",
     "crumbs": [
       "Projects"
     ]
   },
   {
-    "objectID": "projects/index.html#table-listing",
-    "href": "projects/index.html#table-listing",
-    "title": "Projects",
-    "section": "Table listing",
-    "text": "Table listing\nThis is an example of table listing.\n\nPackages\n\n\n\n\n\nTitle\n\n\nDescription\n\n\n\n\n\n\nHolobiont Simulations\n\n\n\n\n\n\n\nPolyphenolic Inhibition of DNA sequencing\n\n\n\n\n\n\n\n\nNo matching items",
-    "crumbs": [
-      "Projects"
-    ]
+    "objectID": "projects/HardyWeinbergFilter/index.html",
+    "href": "projects/HardyWeinbergFilter/index.html",
+    "title": "Hardy-Weinberg Filtering on Pop Gen Data",
+    "section": "",
+    "text": "In this project I use EHR to explore the hospital transfers."
   },
   {
-    "objectID": "projects/project_2/index.html",
-    "href": "projects/project_2/index.html",
-    "title": "project_2",
+    "objectID": "projects/KelpPolyphenols/index.html",
+    "href": "projects/KelpPolyphenols/index.html",
+    "title": "Polyphenolic Inhibition of DNA sequencing",
     "section": "",
-    "text": "In this project I work on Machine Learning methods to predict in-hospital mortality."
+    "text": "During my PhD I really struggled with doing some Nanopore sequencing of seaweeds - this seemed to be a pretty common issue, so I undertook to resolve this. I partnered with Nick Green in Chemistry at Otago to do some LC-MS of our DNA, and found strong evidence for polyphenol adducts in our DNA extracts. Here’s the abstract:\nGenomic resources for macroalgae are increasingly important for conservation and commercial management, however the generation of such resources continues to be hampered by difficulties in the isolation of suitable DNA. Even when DNA has been isolated that otherwise appears high quality, such samples may not perform well during the sequencing process. We here compare Oxford Nanopore long-read sequencing results for three species of macroalgae to those of non-macroalgal species and find that macroalgal samples tend to lead to rapid decline in the number of available sequencing pores resulting in reduced sequencing yield. LC-MS analysis of macroalgal DNA that would be considered suitable for sequencing reveals that DNA derived from dried macroalgae is enriched for polyphenol-DNA adducts – which may lead to sequencing inhibition. Our findings have wide-ranging implications for the generation of genomic resources from macroalgae, for example long read sequencing of dried herbarium specimens, and suggest a need to use fresh tissue wherever possible for genome sequencing."
+  },
+  {
+    "objectID": "projects/SeaweedMicrobiomes/index.html",
+    "href": "projects/SeaweedMicrobiomes/index.html",
+    "title": "Seaweed Microbiomes",
+    "section": "",
+    "text": "Here’s some work i’ve done on seaweed microbiomes"
+  },
+  {
+    "objectID": "projects/IsopodPopgen/index.html",
+    "href": "projects/IsopodPopgen/index.html",
+    "title": "Mitogenomics and Biogeography of Isocladus armatus",
+    "section": "",
+    "text": "This work was really the bulk of my masters research, first - I aimed to generate a mitogenome for a native colour polymorphic isopod Isocladus armatus. We found, during this process, that the mitogenome was rather bizarre - consisting of an inverted repeated mitogenome arrange in duplicate. Here’s the abstract, and you can read about it at Long-read sequencing reveals atypical mitochondrial genome structure in a New Zealand marine isopod\nMost animal mitochondrial genomes are small, circular and structurally conserved. However, recent work indicates that diverse taxa possess unusual mitochondrial genomes. In Isopoda, species in multiple lineages have atypical and rearranged mitochondrial genomes. However, more species of this speciose taxon need to be evaluated to understand the evolutionary origins of atypical mitochondrial genomes in this group. In this study, we report the presence of an atypical mitochondrial structure in the New Zealand endemic marine isopod, Isocladus armatus. Data from long- and short-read DNA sequencing suggest that I. armatus has two mitochondrial chromosomes. The first chromosome consists of two mitochondrial genomes that have been inverted and fused together in a circular form, and the second chromosome consists of a single mitochondrial genome in a linearized form. This atypical mitochondrial structure has been detected in other isopod lineages, and our data from an additional divergent isopod lineage (Sphaeromatidae) lends support to the hypothesis that atypical structure evolved early in the evolution of Isopoda. Additionally, we find that an asymmetrical site previously observed across many species within Isopoda is absent in I. armatus, but confirm the presence of two asymmetrical sites recently reported in two other isopod species.\nAt the same as this, I was also working on the biogeography of this species using Genotyping-by-Sequencing. We found really strong population structure, and evidence for isolation-by-distance. Strikingly, the geographic arrange of the populations was concordant with the principal component space of the genetic data. You can read about it here: Concordant geographic and genetic structure revealed by genotyping‐by‐sequencing in a New Zealand marine isopod\nHere’s the abstract: Population genetic structure in the marine environment can be influenced by life-history traits such as developmental mode (biphasic, with distinct adult and larval morphology, and direct development, in which larvae resemble adults) or habitat specificity, as well as geography and selection. Developmental mode is thought to significantly influence dispersal, with direct developers expected to have much lower dispersal potential. However, this prediction can be complicated by the presence of geophysical barriers to dispersal. In this study, we use a panel of 8,020 SNPs to investigate population structure and biogeography over multiple spatial scales for a direct-developing species, the New Zealand endemic marine isopod Isocladus armatus. Because our sampling range is intersected by two well-known biogeographic barriers (the East Cape and the Cook Strait), our study provides an opportunity to understand how such barriers influence dispersal in direct developers. On a small spatial scale (20 km), gene flow between locations is extremely high, suggestive of an island model of migration. However, over larger spatial scales (600 km), populations exhibit a clear pattern of isolation-by-distance. Our results indicate that I. armatus exhibits significant migration across the hypothesized barriers and suggest that large-scale ocean currents associated with these locations do not present a barrier to dispersal. Interestingly, we find evidence of a north-south population genetic break occurring between Māhia and Wellington. While no known geophysical barrier is apparent in this area, it coincides with the location of a proposed border between bioregions. Analysis of loci under selection revealed that both isolation-by-distance and adaption may be contributing to the degree of population structure we have observed here. We conclude that developmental life history largely predicts dispersal in the intertidal isopod I. armatus. However, localized biogeographic processes can disrupt this expectation, and this may explain the potential meta-population detected in the Auckland region."
   },
   {
     "objectID": "projects/pkg_1/index.html",
@@ -113,36 +127,6 @@
     "title": "pkg_2",
     "section": "",
     "text": "This package does this."
-  },
-  {
-    "objectID": "talks/index.html",
-    "href": "talks/index.html",
-    "title": "Talks",
-    "section": "",
-    "text": "Talk at Oslo UseR meetup\n\n\n\n\n\nApr 2, 2019\n\n\n\n\n\n\nNo matching items",
-    "crumbs": [
-      "Talks"
-    ]
-  },
-  {
-    "objectID": "talks/index.html#rstats",
-    "href": "talks/index.html#rstats",
-    "title": "Talks",
-    "section": "",
-    "text": "Talk at Oslo UseR meetup\n\n\n\n\n\nApr 2, 2019\n\n\n\n\n\n\nNo matching items",
-    "crumbs": [
-      "Talks"
-    ]
-  },
-  {
-    "objectID": "talks/index.html#electronic-health-records",
-    "href": "talks/index.html#electronic-health-records",
-    "title": "Talks",
-    "section": "Electronic Health Records",
-    "text": "Electronic Health Records\n\n\n\n\n\n\n\n\n\n\nLearning from Hospital EHR data with R\n\n\n\n\n\nA 15 minutes introduction to hospital EHR data\n\n\n\n\n\nOct 28, 2019\n\n\n\n\n\n\nNo matching items",
-    "crumbs": [
-      "Talks"
-    ]
   },
   {
     "objectID": "index.html",
@@ -170,59 +154,53 @@
     ]
   },
   {
-    "objectID": "about.html#service-outreach",
-    "href": "about.html#service-outreach",
-    "title": "Author",
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "CV",
     "section": "",
-    "text": "Peer review for:\n\nJournal of Phycology\nJournal of Biogeography\nMolecular Ecology\nMolecular Ecology Resources\n\nCommittee Member - University of Auckland Faculty of Science Reserach Fellow Society\nOrganizer - University of Auckland MicroGroup\nInvited Speaker to science communication talks, All Saints Church - Birkenhead",
+    "text": "Download as PDF",
     "crumbs": [
-      "About",
-      "About me"
+      "CV"
     ]
   },
   {
-    "objectID": "projects/KelpPolyphenols/index.html",
-    "href": "projects/KelpPolyphenols/index.html",
-    "title": "Polyphenolic Inhibition of DNA sequencing",
-    "section": "",
-    "text": "During my PhD I really struggled with doing some Nanopore sequencing of seaweeds - this seemed to be a pretty common issue, so I undertook to resolve this. I partnered with Nick Green in Chemistry at Otago to do some LC-MS of our DNA, and found strong evidence for polyphenol adducts in our DNA extracts. Here’s the abstract:\nGenomic resources for macroalgae are increasingly important for conservation and commercial management, however the generation of such resources continues to be hampered by difficulties in the isolation of suitable DNA. Even when DNA has been isolated that otherwise appears high quality, such samples may not perform well during the sequencing process. We here compare Oxford Nanopore long-read sequencing results for three species of macroalgae to those of non-macroalgal species and find that macroalgal samples tend to lead to rapid decline in the number of available sequencing pores resulting in reduced sequencing yield. LC-MS analysis of macroalgal DNA that would be considered suitable for sequencing reveals that DNA derived from dried macroalgae is enriched for polyphenol-DNA adducts – which may lead to sequencing inhibition. Our findings have wide-ranging implications for the generation of genomic resources from macroalgae, for example long read sequencing of dried herbarium specimens, and suggest a need to use fresh tissue wherever possible for genome sequencing."
-  },
-  {
-    "objectID": "projects/MicrobiomeSimulations/index.html",
-    "href": "projects/MicrobiomeSimulations/index.html",
-    "title": "Holobiont Simulations",
-    "section": "",
-    "text": "In this project I work on Machine Learning methods to predict in-hospital mortality."
-  },
-  {
-    "objectID": "projects/index.html#research-projects",
-    "href": "projects/index.html#research-projects",
-    "title": "Projects",
-    "section": "",
-    "text": "No matching items",
+    "objectID": "cv.html#education",
+    "href": "cv.html#education",
+    "title": "CV",
+    "section": "Education",
+    "text": "Education\nPhD, Genetics / Marine Biology — University of Otago, Dunedin, New Zealand (2023) Seaweed population genomics and microbiome structure.\nMaster of Natural Science (Distinction), Molecular Ecology — Massey University, Auckland, New Zealand (2020)\nBachelor of Natural Science, Molecular Ecology — Massey University, Auckland, New Zealand (2018)",
     "crumbs": [
-      "Projects"
+      "CV"
     ]
   },
   {
-    "objectID": "projects/SeaweedMicrobiomes/index.html",
-    "href": "projects/SeaweedMicrobiomes/index.html",
-    "title": "Seaweed Microbiomes",
-    "section": "",
-    "text": "Here’s some work i’ve done on seaweed microbiomes"
+    "objectID": "cv.html#positions",
+    "href": "cv.html#positions",
+    "title": "CV",
+    "section": "Positions",
+    "text": "Positions\nResearch Fellow — University of Auckland Host-microbe evolution, using simulations. Molecular ecology across whole genome sequencing, population genomics, eDNA, microbial ecology, and nanopore sequencing of recalcitrant species.",
+    "crumbs": [
+      "CV"
+    ]
   },
   {
-    "objectID": "projects/IsopodPopgen/index.html",
-    "href": "projects/IsopodPopgen/index.html",
-    "title": "Mitogenomics and Biogeography of Isocladus armatus",
-    "section": "",
-    "text": "This work was really the bulk of my masters research, first - I aimed to generate a mitogenome for a native colour polymorphic isopod Isocladus armatus. We found, during this process, that the mitogenome was rather bizarre - consisting of an inverted repeated mitogenome arrange in duplicate. Here’s the abstract, and you can read about it at Long-read sequencing reveals atypical mitochondrial genome structure in a New Zealand marine isopod\nMost animal mitochondrial genomes are small, circular and structurally conserved. However, recent work indicates that diverse taxa possess unusual mitochondrial genomes. In Isopoda, species in multiple lineages have atypical and rearranged mitochondrial genomes. However, more species of this speciose taxon need to be evaluated to understand the evolutionary origins of atypical mitochondrial genomes in this group. In this study, we report the presence of an atypical mitochondrial structure in the New Zealand endemic marine isopod, Isocladus armatus. Data from long- and short-read DNA sequencing suggest that I. armatus has two mitochondrial chromosomes. The first chromosome consists of two mitochondrial genomes that have been inverted and fused together in a circular form, and the second chromosome consists of a single mitochondrial genome in a linearized form. This atypical mitochondrial structure has been detected in other isopod lineages, and our data from an additional divergent isopod lineage (Sphaeromatidae) lends support to the hypothesis that atypical structure evolved early in the evolution of Isopoda. Additionally, we find that an asymmetrical site previously observed across many species within Isopoda is absent in I. armatus, but confirm the presence of two asymmetrical sites recently reported in two other isopod species.\nAt the same as this, I was also working on the biogeography of this species using Genotyping-by-Sequencing. We found really strong population structure, and evidence for isolation-by-distance. Strikingly, the geographic arrange of the populations was concordant with the principal component space of the genetic data. You can read about it here: Concordant geographic and genetic structure revealed by genotyping‐by‐sequencing in a New Zealand marine isopod\nHere’s the abstract: Population genetic structure in the marine environment can be influenced by life-history traits such as developmental mode (biphasic, with distinct adult and larval morphology, and direct development, in which larvae resemble adults) or habitat specificity, as well as geography and selection. Developmental mode is thought to significantly influence dispersal, with direct developers expected to have much lower dispersal potential. However, this prediction can be complicated by the presence of geophysical barriers to dispersal. In this study, we use a panel of 8,020 SNPs to investigate population structure and biogeography over multiple spatial scales for a direct-developing species, the New Zealand endemic marine isopod Isocladus armatus. Because our sampling range is intersected by two well-known biogeographic barriers (the East Cape and the Cook Strait), our study provides an opportunity to understand how such barriers influence dispersal in direct developers. On a small spatial scale (20 km), gene flow between locations is extremely high, suggestive of an island model of migration. However, over larger spatial scales (600 km), populations exhibit a clear pattern of isolation-by-distance. Our results indicate that I. armatus exhibits significant migration across the hypothesized barriers and suggest that large-scale ocean currents associated with these locations do not present a barrier to dispersal. Interestingly, we find evidence of a north-south population genetic break occurring between Māhia and Wellington. While no known geophysical barrier is apparent in this area, it coincides with the location of a proposed border between bioregions. Analysis of loci under selection revealed that both isolation-by-distance and adaption may be contributing to the degree of population structure we have observed here. We conclude that developmental life history largely predicts dispersal in the intertidal isopod I. armatus. However, localized biogeographic processes can disrupt this expectation, and this may explain the potential meta-population detected in the Auckland region."
+    "objectID": "cv.html#skills",
+    "href": "cv.html#skills",
+    "title": "CV",
+    "section": "Skills",
+    "text": "Skills\n\nR — data visualization, analysis, eDNA/metabarcoding analysis, and simulation\nCommand line bioinformatics — genome assembly, variant calling, metagenomic analysis\nProject management\nScientific publishing",
+    "crumbs": [
+      "CV"
+    ]
   },
   {
-    "objectID": "projects/HardyWeinbergFilter/index.html",
-    "href": "projects/HardyWeinbergFilter/index.html",
-    "title": "Hardy-Weinberg Filtering on Pop Gen Data",
-    "section": "",
-    "text": "In this project I use EHR to explore the hospital transfers."
+    "objectID": "cv.html#service-outreach",
+    "href": "cv.html#service-outreach",
+    "title": "CV",
+    "section": "Service & Outreach",
+    "text": "Service & Outreach\n\nPeer review: Journal of Phycology, Journal of Biogeography, Molecular Ecology, Molecular Ecology Resources\nCommittee Member — University of Auckland Faculty of Science Research Fellow Society\nOrganizer — University of Auckland MicroGroup\nInvited speaker, science communication — All Saints Church, Birkenhead",
+    "crumbs": [
+      "CV"
+    ]
   }
 ]

@@ -1,0 +1,19 @@
+---
+title: "Talks"
+listing:
+  id: talks-listing
+  max-description-length: 500
+  image-height: 150px
+  fields: [title, description, image, date]
+  contents:
+    - "*"
+    - "!_example-talk"
+  type: default
+  grid-item-border: false
+  sort: "date desc"
+  sort-ui: false
+  filter-ui: false
+---
+
+::: {#talks-listing}
+:::

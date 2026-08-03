@@ -1,0 +1,14 @@
+---
+title: "William Pearman"
+subtitle: "Curriculum Vitae"
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    fontsize: 11pt
+    colorlinks: true
+    toc: false
+output-file: "cv"
+---
+
+{{< include _cv-content.qmd >}}

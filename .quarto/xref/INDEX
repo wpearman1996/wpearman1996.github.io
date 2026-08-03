@@ -55,5 +55,11 @@
   },
   "projects/HardyWeinbergFilter/index.qmd": {
     "index.html": "604d97a5"
+  },
+  "cv-pdf.qmd": {
+    "cv-pdf.tex": "df373554"
+  },
+  "cv.qmd": {
+    "cv.html": "2dcbf484"
   }
 }

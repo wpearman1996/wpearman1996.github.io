@@ -1,0 +1,10 @@
+---
+title: "CV"
+format:
+  html:
+    toc: true
+---
+
+[Download as PDF](cv.pdf){.btn .btn-outline-primary role="button" download="William-Pearman-CV.pdf"}
+
+{{< include _cv-content.qmd >}}

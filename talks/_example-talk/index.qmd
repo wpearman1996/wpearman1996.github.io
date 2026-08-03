@@ -1,0 +1,12 @@
+---
+title: "Example Talk Title"
+description: "Venue / event name"
+date: "2024-01-01"
+categories: [example]
+---
+
+Template for a new talk entry. Copy this folder (remove the leading
+underscore from the folder name so Quarto picks it up), rename it,
+and fill in the fields above plus this body text.
+
+![](image.jpg)

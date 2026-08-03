@@ -7,6 +7,10 @@
     ]
   },
   {
+    "listing": "/talks/index.html",
+    "items": []
+  },
+  {
     "listing": "/projects/index.html",
     "items": [
       "/projects/HardyWeinbergFilter/index.html",
@@ -14,13 +18,6 @@
       "/projects/IsopodPopgen/index.html",
       "/projects/KelpPolyphenols/index.html",
       "/projects/SeaweedMicrobiomes/index.html"
-    ]
-  },
-  {
-    "listing": "/talks/index.html",
-    "items": [
-      "/talks/talk_1/index.html",
-      "/talks/talk_2/index.html"
     ]
   }
 ]
