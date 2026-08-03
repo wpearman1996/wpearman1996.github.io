@@ -1,6 +1,6 @@
 ---
 title: "William Pearman"
-image: profile.png
+image: profile.jpg
 about:
   id: hero-heading
   template: trestles
@@ -18,9 +18,6 @@ about:
       href: https://www.linkedin.com/in/william-pearman-6b3188392/
     - text: '<i class="fa-brands fa-bluesky"></i> Bluesky'
       href: https://bsky.app/profile/williampearman.bsky.social
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/WilliamPearman
 ---
 
 ::: {#hero-heading}

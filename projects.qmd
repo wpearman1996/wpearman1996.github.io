@@ -1,0 +1,40 @@
+---
+title: "Projects"
+description: "A summary of my research projects."
+toc: true
+toc-location: left
+---
+
+## Polyphenolic Inhibition of Nanopore Sequencing
+
+During my PhD I struggled with Nanopore sequencing of seaweeds - an issue that turned out to be widespread in macroalgal genomics. Working with Nick Green in Chemistry at Otago, we used LC-MS on our DNA extracts and found strong evidence for polyphenol-DNA adducts causing rapid pore blocking and reduced sequencing yield, particularly in dried tissue. The findings have implications for genomic resource generation from macroalgae, including long-read sequencing of herbarium specimens.
+
+Published as: [A cry for kelp: Evidence for polyphenolic inhibition of Oxford Nanopore sequencing of brown algae](https://doi.org/10.1111/jpy.13513), *Journal of Phycology* (2024).
+
+## Seaweed Microbiome Biogeography
+
+Work on the structure and biogeography of macroalgal (seaweed) microbiomes - looking at how host population dynamics, dispersal, and environmental drivers shape the microbial communities associated with kelp and other macroalgae across their range.
+
+Published as: [Macroalgal microbiome biogeography is shaped by environmental drivers rather than geographical distance](https://doi.org/10.1093/aob/mcad151), *Annals of Botany* (2024), and related work on [host dispersal and rafting microbiomes](https://doi.org/10.1038/s41467-024-54954-z) in *Nature Communications* (2024).
+
+## Hardy-Weinberg Equilibrium Filtering for RADseq Data
+
+A methods project investigating how commonly used Hardy-Weinberg equilibrium filtering schemes affect population structure inferences drawn from RADseq (reduced-representation sequencing) data - relevant to anyone using these filters as a standard QC step in population genomics pipelines.
+
+Published as: [Commonly used Hardy-Weinberg equilibrium filtering schemes impact population structure inferences using RADseq data](https://doi.org/10.1111/1755-0998.13646), *Molecular Ecology Resources* (2022).
+
+## Mitogenomics and Biogeography of *Isocladus armatus*
+
+The bulk of my Master's research, on the New Zealand endemic marine isopod *Isocladus armatus*. First, I generated a mitogenome for this colour-polymorphic isopod and found it had a bizarre structure - an inverted, duplicated arrangement rather than the typical small circular mitogenome. Alongside this, I used genotyping-by-sequencing to study the species' biogeography, finding strong population structure and isolation-by-distance, with the geographic arrangement of populations concordant with the genetic PCA space.
+
+Published as: [Long-read sequencing reveals atypical mitochondrial genome structure in a New Zealand marine isopod](https://doi.org/10.1098/rsos.211550), *Royal Society Open Science* (2022), and [Concordant geographic and genetic structure revealed by genotyping-by-sequencing in a New Zealand marine isopod](https://doi.org/10.1002/ece3.6802), *Ecology and Evolution* (2020).
+
+## Holobiont Eco-Evolutionary Simulations
+
+Ongoing work developing eco-evolutionary simulations of microbial communities within hosts, to build and test hypotheses about holobiont (host-microbiome unit) evolution - in particular, how environmental variability shapes selection for microbiome-mediated host adaptation. This modelling work pairs with experimental work in *Daphnia* to test microbial contributions to host fitness under environmental change.
+
+Published as: [Within-host microbial selection and multiple microbial generations buffer the loss of host fitness under environmental change](https://doi.org/10.1093/femsec/fiaf089), *FEMS Microbiology Ecology* (2025).
+
+<br>
+
+See the [Research](research.qmd) page for the full publication list.

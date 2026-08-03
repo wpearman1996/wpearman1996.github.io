@@ -1,1 +1,12 @@
 /.quarto/
+
+# vitae::twentyseconds() copies these into the project root on every CV
+# render (copy_supporting_files()) -- not needed, we supply our own
+# patched twentysecondcv.cls and profile.jpg.
+/LICENSE
+/mariecurie.jpg
+
+# LaTeX/knitr build byproducts from rendering _cv-pdf.Rmd
+/cv.log
+/missfont.log
+*.knit.md

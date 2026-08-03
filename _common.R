@@ -57,7 +57,9 @@ format_pub_citation <- function(pub) {
     journal_str <- glue("{journal_str}, {pub$pages}")
   }
   journal_str <- glue("{journal_str}.")
-  doi_str <- glue("[doi:{pub$doi}](https://doi.org/{pub$doi})")
+  # Short link text: a full DOI as one unbroken token can overflow the
+  # printed page width (no natural break points for LaTeX to wrap on).
+  doi_str <- glue("[DOI](https://doi.org/{pub$doi})")
   paste(pub$authors, year_str, title_str, journal_str, doi_str)
 }
 
@@ -98,18 +100,17 @@ icon_link <- function(icon = NULL, text = NULL, url = NULL, class = "icon-link",
 # HTML and PDF versions always stay in sync with the same source data) ---
 
 render_cv_education <- function() {
-  ed <- readr::read_csv(here::here("content", "cv_education.csv"), show_col_types = FALSE) |>
-    arrange(desc(year))
+  ed <- education_tibble()
   glue::glue_collapse(
-    glue::glue("**{ed$degree}** — {ed$institution} ({ed$year})"),
+    glue::glue("**{ed$degree}** — {ed$institution}, {ed$location} ({ed$year})"),
     sep = "\n\n"
   )
 }
 
 render_cv_positions <- function() {
-  pos <- readr::read_csv(here::here("content", "cv_positions.csv"), show_col_types = FALSE)
+  pos <- positions_tibble()
   glue::glue_collapse(
-    glue::glue("**{pos$title}**, {pos$institution} ({pos$dates})"),
+    glue::glue("**{pos$title}**, {pos$institution}, {pos$location} ({pos$dates})"),
     sep = "\n\n"
   )
 }
@@ -120,6 +121,27 @@ render_cv_distinctions <- function() {
     glue::glue("- {d$year} — {d$description}"),
     sep = "\n"
   )
+}
+
+# --- Tibbles for vitae::detailed_entries() (used by the twentyseconds PDF) ---
+
+education_tibble <- function() {
+  readr::read_csv(here::here("content", "cv_education.csv"), show_col_types = FALSE) |>
+    arrange(desc(year))
+}
+
+positions_tibble <- function() {
+  readr::read_csv(here::here("content", "cv_positions.csv"), show_col_types = FALSE)
+}
+
+# Strip the protocol from a URL, e.g. "https://example.com/x" -> "example.com/x"
+strip_protocol <- function(url) sub("^https?://", "", url)
+
+# Last non-empty path segment of a URL, e.g. ".../in/jane-doe/" -> "jane-doe"
+url_handle <- function(url) {
+  url <- sub("/$", "", url)
+  parts <- strsplit(url, "/")[[1]]
+  parts[length(parts)]
 }
 
 render_cv_publications <- function() {
