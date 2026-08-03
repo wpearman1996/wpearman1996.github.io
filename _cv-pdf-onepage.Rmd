@@ -1,10 +1,15 @@
 ---
-# See _cv-pdf.Rmd for notes on why contact fields are duplicated here.
-# This is a condensed, one-page variant: trimmed distinctions list and
-# only the most-cited publications (ranked using content/scholar_pubs.csv),
-# no Teaching/Presentations sections. `params.n_distinctions`/`n_pubs`
-# below are the defaults when rendered directly; render_cv_pdf_onepage.R
-# overrides them and searches for values that fill exactly one page.
+# Contact fields are duplicated from content/cv_meta.yml because the
+# vitae::twentyseconds template reads its sidebar straight from this YAML
+# header (not evaluated R) -- update both if contact info changes.
+#
+# The main CV (docs/cv.pdf) now renders via _cv-pagedown.Rmd; this file
+# is kept only for the condensed one-page variant (docs/cv-1page.pdf),
+# trimmed to a shorter distinctions list and only the most-cited
+# publications (ranked using content/scholar_pubs.csv), no Teaching/
+# Presentations sections. `params.n_distinctions`/`n_pubs` below are the
+# defaults when rendered directly; render_cv_pdf_onepage.R overrides them
+# and searches for values that fill exactly one page.
 name: "William"
 surname: "Pearman"
 position: "Research Fellow"

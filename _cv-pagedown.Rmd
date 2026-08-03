@@ -1,0 +1,166 @@
+---
+title: "William Pearman <br> Curriculum vitae"
+output:
+  pagedown::html_paged:
+    css: ["css/bootstrap-5.2.1.min.css", "css/two-col-cv.css"]
+    number_sections: false
+knit: pagedown::chrome_print
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(glue)
+library(fontawesome)
+library(knitr)
+source("_common.R")
+meta <- load_meta()
+
+# Hidden-header, 2-column (year | description) table, matching the
+# pagedownCV visual style -- CSS hides <thead> and sizes the year column.
+year_table <- function(d, year_col, text_col) {
+  d |>
+    transmute(Year = .data[[year_col]], What = .data[[text_col]]) |>
+    kable(col.names = c("", ""), escape = FALSE)
+}
+```
+
+::: {.row}
+
+:::::: {.col-8 .summary}
+
+# Research summary
+
+`r meta$speciality`
+
+::::::
+
+:::::: {.col-4}
+
+# Contact {.box}
+
+::::::::: {.info-box}
+
+| Center | Left |
+|:------:|:-----|
+| `r fa("map-marker-alt")` | `r meta$employer`, `r positions_tibble()$location[1]` |
+| `r fa("envelope")` | `r meta$email` |
+| `r fa("globe")` | [profile](`r meta$website`) |
+| `r fa("github")` | [`r url_handle(meta$github)`](`r meta$github`) |
+| `r fa("linkedin")` | [`r url_handle(meta$linkedin)`](`r meta$linkedin`) |
+| `r fa("google-scholar")` | [Google Scholar](`r meta$scholar_url`) |
+| `r fa("bluesky")` | [Bluesky](`r meta$bluesky`) |
+
+:::::::::
+
+::::::
+
+:::
+
+::: {.row}
+
+:::::: {.col-6 .left}
+
+# Awards and honours
+
+```{r}
+distinctions_tibble(category = "award") |>
+  arrange(desc(year)) |>
+  year_table("year", "description")
+```
+
+::::::
+
+:::::: {.col-6 .right}
+
+# Education
+
+```{r}
+education_tibble() |>
+  mutate(what = glue("<span class='cv-entry-title'>{degree}</span>, {institution}, {location}")) |>
+  year_table("year", "what")
+```
+
+::::::
+
+:::
+
+::: {.row}
+
+:::::: {.col-6 .left}
+
+# Selected major grants
+
+```{r}
+distinctions_tibble(category = "grant") |>
+  arrange(desc(year)) |>
+  year_table("year", "description")
+```
+
+::::::
+
+:::::: {.col-6 .right}
+
+# Selected teaching experience
+
+```{r}
+#| results: asis
+cat(render_cv_teaching())
+```
+
+::::::
+
+:::
+
+<!-- you might want to manually insert page breaks -->
+<br class="pageBreak" />
+
+::: {.row .pagetwo}
+
+:::::: {.col-6 .left}
+
+# Selected talks {.talks}
+
+```{r}
+presentations_tibble() |>
+  year_table("year", "description")
+```
+
+::::::
+
+:::::: {.col-6 .right}
+
+# Selected service
+
+```{r}
+distinctions_tibble(category = "service") |>
+  arrange(desc(year)) |>
+  year_table("year", "description")
+```
+
+# Professional development {.prof-dev}
+
+```{r}
+distinctions_tibble(category = "prof-dev") |>
+  arrange(desc(year)) |>
+  year_table("year", "description")
+```
+
+::::::
+
+:::
+
+::: {.row}
+
+:::::: {.col-12}
+
+# Publications
+
+```{r}
+#| results: asis
+cat(render_cv_publications())
+```
+
+::::::
+
+:::

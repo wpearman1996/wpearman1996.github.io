@@ -34,6 +34,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -75,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -91,7 +92,7 @@ ul.task-list li input[type="checkbox"] {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
@@ -113,6 +114,10 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./recipes.html"> 
+<span class="menu-text">Recipes</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./cv.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
@@ -122,58 +127,72 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">William Pearman</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="quarto-sidebar-header"><div class="sidebar-header-item">
+<!--
+Quarto resolves `sidebar: header:` relative to each page's own directory,
+not the project root, so this file is duplicated at talks/_sidebar-header.md
+for pages under talks/. Keep both copies identical -- if you add another
+subdirectory of pages, copy this file into it too.
+-->
+<div class="sidebar-card">
+<p><img src="./profile.jpg" class="sidebar-photo img-fluid"></p>
+<p><strong>William Pearman</strong></p>
+<p>Research Fellow at the University of Auckland, working on population genomics and the evolution of host-microbe relationships.</p>
+<ul>
+<li><i class="fa-solid fa-envelope"></i> <a href="mailto:william.pearman@auckland.ac.nz">Email</a></li>
+<li><i class="ai ai-google-scholar"></i> <a href="https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&amp;hl=en">Google Scholar</a></li>
+<li><i class="fa-brands fa-github"></i> <a href="https://github.com/wpearman1996">GitHub</a></li>
+<li><i class="fa-brands fa-linkedin"></i> <a href="https://www.linkedin.com/in/william-pearman-6b3188392/">LinkedIn</a></li>
+<li><i class="fa-brands fa-bluesky"></i> <a href="https://bsky.app/profile/williampearman.bsky.social">Bluesky</a></li>
+</ul>
+</div>
+</div></div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-
-
-
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="profile.jpg" class="about-image
-  rectangle " style="width: 20em;">
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">William Pearman</h1>
 </div>
+
+
+
 <div class="quarto-title-meta">
+
+    
+  
+    
   </div>
+  
+
+
 </header>
-    <div class="about-links">
-  <a href="/cv.html" class="about-link" rel="" target="">
-     <span class="about-link-text"><i class="fa-solid fa-file-arrow-down"></i> CV</span>
-  </a>
-  <a href="https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&amp;hl=en" class="about-link" rel="" target="">
-     <span class="about-link-text"><i class="ai ai-google-scholar fa-lg"></i> Scholar</span>
-  </a>
-  <a href="https://github.com/wpearman1996" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-  <a href="https://www.linkedin.com/in/william-pearman-6b3188392/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://bsky.app/profile/williampearman.bsky.social" class="about-link" rel="" target="">
-     <span class="about-link-text"><i class="fa-brands fa-bluesky"></i> Bluesky</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><div id="hero-heading">
+
+
 <p>I’m William Pearman - at the moment I am a Research Fellow at the University of Auckland, working on host-microbe evolution questions, using simulations. However more broadly I am a molecular ecologist, working on a range of projects from whole genome sequencing and population genomics, eDNA, microbial ecology, and nanopore sequencing of recalcitrant species.</p>
 <p>My research background is a combination of population genomics and microbial ecology, and thus my current research interests are in aligning these two fields to understand the evolution of ‘holobionts’ or host-microbiome units. At present, I use eco-evolutionary modelling to develop frameworks and hypotheses regarding holobiont evolution which can then be tested using existing datasets. In particular, my current research aims to understand how environmental variability shapes selection and evolution of host-microbe systems, whereby higher levels of environmental variability may result in increased selection for microbiome-mediated adaptation of the host. In addition to these areas, I am also actively involved in the application and optimisation of new molecular biology protocols for non-model organisms.</p>
 <p><strong>More than anything, I like solving problems. Most of my work to date has been focussed on interesting questions, or tricky problems - like why some species don’t sequence so well with nanopore sequencing.</strong></p>
 <p>Feel free to get in touch if you want a copy of any of my publications, or if you’re interested in collaborating. See my <a href="./cv.html">CV</a> for full details, or my <a href="./research.html">Research</a> page for publications and <a href="./metrics.html">citation metrics</a>.</p>
-</div></div>
-</div>
-
-
 
 
 
@@ -198,6 +217,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

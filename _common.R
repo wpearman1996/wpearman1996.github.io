@@ -74,7 +74,7 @@ make_pub_item <- function(pub) {
   cites_badge <- ""
   if (!is.na(pub$cites)) {
     cites_badge <- glue::glue(
-      '<span class="icon-link" style="background-color:#54807b;">',
+      '<span class="icon-link" style="background-color:#6A737D;">',
       '{pub$cites} citation{ifelse(pub$cites == 1, "", "s")}</span> '
     )
   }
@@ -115,8 +115,19 @@ render_cv_positions <- function() {
   )
 }
 
-render_cv_distinctions <- function(top_n = NULL) {
+distinctions_tibble <- function(category = NULL) {
+  # .env$category (not bare `category`) is required: dplyr's data mask
+  # resolves an unqualified name against the data frame's own columns
+  # first, and this data frame already has a column called "category" --
+  # `filter(category %in% category)` would silently compare the column
+  # to itself (always TRUE) instead of to this function's argument.
   d <- readr::read_csv(here::here("content", "cv_distinctions.csv"), show_col_types = FALSE)
+  if (!is.null(category)) d <- d |> filter(.data$category %in% .env$category)
+  d
+}
+
+render_cv_distinctions <- function(top_n = NULL, category = NULL) {
+  d <- distinctions_tibble(category = category)
   if (!is.null(top_n)) d <- head(d, top_n)
   glue::glue_collapse(
     glue::glue("- {d$year} — {d$description}"),
@@ -132,9 +143,13 @@ render_cv_teaching <- function() {
   )
 }
 
-render_cv_presentations <- function() {
-  p <- readr::read_csv(here::here("content", "cv_presentations.csv"), show_col_types = FALSE) |>
+presentations_tibble <- function() {
+  readr::read_csv(here::here("content", "cv_presentations.csv"), show_col_types = FALSE) |>
     arrange(desc(year))
+}
+
+render_cv_presentations <- function() {
+  p <- presentations_tibble()
   glue::glue_collapse(
     glue::glue("- {p$year} — {p$description}"),
     sep = "\n"

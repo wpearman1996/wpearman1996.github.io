@@ -10,3 +10,8 @@
 /cv.log
 /missfont.log
 *.knit.md
+
+# pagedown::chrome_print byproducts from rendering _cv-pagedown.Rmd
+# (favicon.ico is an empty placeholder -- see render_cv_pagedown.R)
+/_cv-pagedown.html
+/favicon.ico

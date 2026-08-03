@@ -1,26 +1,26 @@
-year,description
-2026,Visiting Scholar - KU Leuven
-2025-present,Co-chair - University of Auckland Faculty of Science Research Fellow Society
-2025-present,Member - University of Auckland Faculty of Science Research Committee
-2025,"Mana Tūāpapa Future Leader Fellowship ($820,000 NZD) - Independent 4-year fellowship to explore Daphnia microbial ecology"
-2025,"Te Pūnaha Matatini Seed Fund ($4,880 NZD)"
-2025,"ISME Scholar Mobility Award ($3,000 NZD)"
-2025,"Emerging Researchers Network - Seed Fund ($2,500 NZD)"
-2025,"Genetics Society of Australasia - Workshop Support Fund ($1,000 NZD)"
-2025,"Center for Computational Evolution - Workshop Fund Award ($3,500 NZD)"
-2025,"Genomics Aotearoa - Workshop Fund Award ($5,000 NZD)"
-2024,EEB Representative - University of Auckland Faculty of Science Research Fellow Society
-2024,"University of Auckland Research Fellow Society Seed Funding ($5,000)"
-2024,Invited Speaker - Center for Computational Evolution's 2024 Research Showcase
-2022,Best PhD Presentation - New Zealand Molecular Ecology Conference
-2020,Best PhD Presentation - New Zealand Molecular Ecology Conference
-2020,"New Zealand Marine Sciences Society Student Research Award ($1,500)"
-2020,"University of Otago Doctoral Scholarship ($27,500)"
-2020,Invited participant - Ira Moana Investigator Workshop
-2019,Invited participant - Ira Moana Project Early Career Workshop
-2019,"Massey University Masters Scholarship ($15,000)"
-2018,Presentation Bursary - Oxford Nanopore Technologies
-2018,"Massey Graduate Scholarship, Sciences - Massey University ($5,000)"
-2018,"Natural Sciences Masters Scholarship - Massey University ($10,000)"
-2017,Best Student Presentation - New Zealand Molecular Ecology Conference
-2015,"Vice Chancellors Natural Science Excellence Scholarship, Massey University ($15,000)"
+year,category,description
+2026,prof-dev,Visiting Scholar - KU Leuven
+2025-present,service,Co-chair - University of Auckland Faculty of Science Research Fellow Society
+2025-present,service,Member - University of Auckland Faculty of Science Research Committee
+2025,grant,"Mana Tūāpapa Future Leader Fellowship ($820,000 NZD) - Independent 4-year fellowship to explore Daphnia microbial ecology"
+2025,grant,"Te Pūnaha Matatini Seed Fund ($4,880 NZD)"
+2025,grant,"ISME Scholar Mobility Award ($3,000 NZD)"
+2025,grant,"Emerging Researchers Network - Seed Fund ($2,500 NZD)"
+2025,grant,"Genetics Society of Australasia - Workshop Support Fund ($1,000 NZD)"
+2025,grant,"Center for Computational Evolution - Workshop Fund Award ($3,500 NZD)"
+2025,grant,"Genomics Aotearoa - Workshop Fund Award ($5,000 NZD)"
+2024,service,EEB Representative - University of Auckland Faculty of Science Research Fellow Society
+2024,grant,"University of Auckland Research Fellow Society Seed Funding ($5,000)"
+2024,talk,Invited Speaker - Center for Computational Evolution's 2024 Research Showcase
+2022,award,Best PhD Presentation - New Zealand Molecular Ecology Conference
+2020,award,Best PhD Presentation - New Zealand Molecular Ecology Conference
+2020,award,"New Zealand Marine Sciences Society Student Research Award ($1,500)"
+2020,award,"University of Otago Doctoral Scholarship ($27,500)"
+2020,prof-dev,Invited participant - Ira Moana Investigator Workshop
+2019,prof-dev,Invited participant - Ira Moana Project Early Career Workshop
+2019,award,"Massey University Masters Scholarship ($15,000)"
+2018,award,Presentation Bursary - Oxford Nanopore Technologies
+2018,award,"Massey Graduate Scholarship, Sciences - Massey University ($5,000)"
+2018,award,"Natural Sciences Masters Scholarship - Massey University ($10,000)"
+2017,award,Best Student Presentation - New Zealand Molecular Ecology Conference
+2015,award,"Vice Chancellors Natural Science Excellence Scholarship, Massey University ($15,000)"

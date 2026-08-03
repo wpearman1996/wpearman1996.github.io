@@ -76,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -92,7 +92,7 @@ ul.task-list li input[type="checkbox"] {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
@@ -114,6 +114,10 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./recipes.html"> 
+<span class="menu-text">Recipes</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link active" href="./cv.html" aria-current="page"> 
 <span class="menu-text">CV</span></a>
   </li>  
@@ -123,10 +127,42 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Curriculum Vitae</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="quarto-sidebar-header"><div class="sidebar-header-item">
+<!--
+Quarto resolves `sidebar: header:` relative to each page's own directory,
+not the project root, so this file is duplicated at talks/_sidebar-header.md
+for pages under talks/. Keep both copies identical -- if you add another
+subdirectory of pages, copy this file into it too.
+-->
+<div class="sidebar-card">
+<p><img src="./profile.jpg" class="sidebar-photo img-fluid"></p>
+<p><strong>William Pearman</strong></p>
+<p>Research Fellow at the University of Auckland, working on population genomics and the evolution of host-microbe relationships.</p>
+<ul>
+<li><i class="fa-solid fa-envelope"></i> <a href="mailto:william.pearman@auckland.ac.nz">Email</a></li>
+<li><i class="ai ai-google-scholar"></i> <a href="https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&amp;hl=en">Google Scholar</a></li>
+<li><i class="fa-brands fa-github"></i> <a href="https://github.com/wpearman1996">GitHub</a></li>
+<li><i class="fa-brands fa-linkedin"></i> <a href="https://www.linkedin.com/in/william-pearman-6b3188392/">LinkedIn</a></li>
+<li><i class="fa-brands fa-bluesky"></i> <a href="https://bsky.app/profile/williampearman.bsky.social">Bluesky</a></li>
+</ul>
+</div>
+</div></div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">

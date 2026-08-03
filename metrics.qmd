@@ -39,7 +39,7 @@ cat(glue::glue(
 #| fig-width: 8
 #| fig-height: 4
 ggplot(history, aes(x = year, y = cites)) +
-  geom_col(fill = "#2f7a6b") +
+  geom_col(fill = "#2E6E8E") +
   labs(x = NULL, y = "Citations") +
   theme_minimal(base_size = 13) +
   theme(panel.grid.minor = element_blank())
