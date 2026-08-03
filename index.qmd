@@ -13,6 +13,11 @@ about:
     - icon: github
       text: Github
       href: https://github.com/wpearman1996
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/william-pearman-6b3188392/
+    - text: '<i class="fa-brands fa-bluesky"></i> Bluesky'
+      href: https://bsky.app/profile/williampearman.bsky.social
     - icon: twitter
       text: Twitter
       href: https://twitter.com/WilliamPearman
