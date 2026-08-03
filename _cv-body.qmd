@@ -1,9 +1,10 @@
 <!--
-Shared CV body, included by cv.qmd (HTML). The PDFs (_cv-pagedown.Rmd,
-_cv-pagedown-onepage.Rmd) use the same content/cv_*.csv, content/pubs.csv,
-and content/cv_meta.yml sources via _common.R, but have their own body
-since pagedown's bootstrap-grid layout needs a different structure --
-edit the content/ files, not this one.
+Shared CV body, included by cv.qmd (HTML). Content comes from
+content/cv_entries.csv, content/pubs.csv, and content/cv_meta.yml via
+_common.R -- edit those files (in particular, the show_website column)
+to add/remove content here, not this one. The PDFs (_cv-pagedown.Rmd,
+_cv-pagedown-onepage.Rmd) read the same sources but have their own body
+since pagedown's bootstrap-grid layout needs a different structure.
 -->
 
 ## Research Speciality
@@ -14,47 +15,62 @@ edit the content/ files, not this one.
 
 ```{r}
 #| output: asis
-cat(render_cv_education())
+cat(render_cv_education("website"))
 ```
 
 ## Positions
 
 ```{r}
 #| output: asis
-cat(render_cv_positions())
+cat(render_cv_positions("website"))
 ```
 
-## Distinctions, Grants & Memberships
+## Awards and Honours
 
 ```{r}
 #| output: asis
-cat(render_cv_distinctions())
+cat(render_cv_section("award", "website"))
+```
+
+## Selected Major Grants
+
+```{r}
+#| output: asis
+cat(render_cv_section("grant", "website"))
 ```
 
 ## Service & Outreach
 
 ```{r}
 #| output: asis
-cat(paste0("- Peer review: ", paste(meta$peer_review, collapse = ", ")))
+cat(render_cv_section("service", "website"))
+cat("\n- Peer review: ", paste(meta$peer_review, collapse = ", "))
+```
+
+## Professional Development
+
+```{r}
+#| output: asis
+cat(render_cv_section("prof-dev", "website"))
 ```
 
 ## Teaching
 
 ```{r}
 #| output: asis
-cat(render_cv_teaching())
+cat(render_cv_section("teaching", "website"))
 ```
 
 ## Conference Presentations & Invited Talks
 
 ```{r}
 #| output: asis
-cat(render_cv_presentations())
+cat(render_cv_section("talk", "website"))
 ```
 
 ## Publications
 
 ```{r}
 #| output: asis
-cat(render_cv_publications())
+cat(render_cv_publications("website"))
 ```

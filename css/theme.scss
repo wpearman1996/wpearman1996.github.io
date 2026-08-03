@@ -1,5 +1,6 @@
 /*-- scss:defaults --*/
 
+$grid-sidebar-width: 320px;
 $primary-color: #2E6E8E;
 $blue: #2E6E8E;
 $primary-color-dark: #24292F;
@@ -90,6 +91,8 @@ hr {
 
 .sidebar-photo {
   width: 70%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 50%;
   margin: 0.5rem auto 1rem auto;
   display: block;

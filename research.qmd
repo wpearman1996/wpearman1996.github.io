@@ -12,7 +12,7 @@ toc-location: left
 ```{r setup}
 source("_common.R")
 meta <- load_meta()
-pubs <- load_pubs()
+pubs <- load_pubs("website")
 ```
 
 <center>

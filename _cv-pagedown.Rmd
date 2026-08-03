@@ -15,6 +15,7 @@ library(fontawesome)
 library(knitr)
 source("_common.R")
 meta <- load_meta()
+view <- "full_cv"
 
 # Hidden-header, 2-column (year | description) table, matching the
 # pagedownCV visual style -- CSS hides <thead> and sizes the year column.
@@ -58,40 +59,12 @@ year_table <- function(d, year_col, text_col) {
 
 :::::: {.col-6 .left}
 
-# Awards and honours
-
-```{r}
-distinctions_tibble(category = "award") |>
-  arrange(desc(year)) |>
-  year_table("year", "description")
-```
-
-::::::
-
-:::::: {.col-6 .right}
-
 # Education
 
 ```{r}
-education_tibble() |>
-  mutate(what = glue("<span class='cv-entry-title'>{degree}</span>, {institution}, {location}")) |>
+cv_entries("education", view) |>
+  mutate(what = glue("<span class='cv-entry-title'>{title}</span>, {where}, {location}")) |>
   year_table("year", "what")
-```
-
-::::::
-
-:::
-
-::: {.row}
-
-:::::: {.col-6 .left}
-
-# Selected major grants
-
-```{r}
-distinctions_tibble(category = "grant") |>
-  arrange(desc(year)) |>
-  year_table("year", "description")
 ```
 
 ::::::
@@ -102,7 +75,33 @@ distinctions_tibble(category = "grant") |>
 
 ```{r}
 #| results: asis
-cat(render_cv_teaching())
+cat(render_cv_section("teaching", view))
+```
+
+::::::
+
+:::
+
+::: {.row}
+
+:::::: {.col-6 .left}
+
+# Awards and honours
+
+```{r}
+cv_entries("award", view) |>
+  year_table("year", "title")
+```
+
+::::::
+
+:::::: {.col-6 .right}
+
+# Selected major grants
+
+```{r}
+cv_entries("grant", view) |>
+  year_table("year", "title")
 ```
 
 ::::::
@@ -119,8 +118,8 @@ cat(render_cv_teaching())
 # Selected talks {.talks}
 
 ```{r}
-presentations_tibble() |>
-  year_table("year", "description")
+cv_entries("talk", view) |>
+  year_table("year", "title")
 ```
 
 ::::::
@@ -130,17 +129,15 @@ presentations_tibble() |>
 # Selected service
 
 ```{r}
-distinctions_tibble(category = "service") |>
-  arrange(desc(year)) |>
-  year_table("year", "description")
+cv_entries("service", view) |>
+  year_table("year", "title")
 ```
 
 # Professional development {.prof-dev}
 
 ```{r}
-distinctions_tibble(category = "prof-dev") |>
-  arrange(desc(year)) |>
-  year_table("year", "description")
+cv_entries("prof-dev", view) |>
+  year_table("year", "title")
 ```
 
 ::::::
@@ -155,7 +152,7 @@ distinctions_tibble(category = "prof-dev") |>
 
 ```{r}
 #| results: asis
-cat(render_cv_publications())
+cat(render_cv_publications(view))
 ```
 
 ::::::

@@ -1,0 +1,41 @@
+section,year,sort_year,title,where,location,show_full_cv,show_onepage_cv,show_website
+education,2023,2023,PhD Marine Science,University of Otago,"Dunedin, New Zealand",TRUE,TRUE,TRUE
+education,2020,2020,MNatSci (Distinction) Genetics,Massey University,"Auckland, New Zealand",TRUE,TRUE,TRUE
+education,2018,2018,BNatSci Genetics,Massey University,"Auckland, New Zealand",TRUE,TRUE,TRUE
+position,2024–,2024,Research Fellow,University of Auckland,"Auckland, New Zealand",TRUE,TRUE,TRUE
+position,2023,2023,Assistant Research Fellow / Lab Manager,University of Otago,"Dunedin, New Zealand",TRUE,TRUE,TRUE
+award,2022,2022,Best PhD Presentation - New Zealand Molecular Ecology Conference,,,TRUE,TRUE,TRUE
+award,2020,2020,Best PhD Presentation - New Zealand Molecular Ecology Conference,,,TRUE,FALSE,TRUE
+award,2020,2020,"New Zealand Marine Sciences Society Student Research Award ($1,500)",,,TRUE,FALSE,TRUE
+award,2020,2020,"University of Otago Doctoral Scholarship ($27,500)",,,TRUE,TRUE,TRUE
+award,2019,2019,"Massey University Masters Scholarship ($15,000)",,,TRUE,TRUE,TRUE
+award,2018,2018,Presentation Bursary - Oxford Nanopore Technologies,,,FALSE,FALSE,TRUE
+award,2018,2018,"Massey Graduate Scholarship, Sciences - Massey University ($5,000)",,,FALSE,FALSE,TRUE
+award,2018,2018,"Natural Sciences Masters Scholarship - Massey University ($10,000)",,,TRUE,FALSE,TRUE
+award,2017,2017,Best Student Presentation - New Zealand Molecular Ecology Conference,,,TRUE,FALSE,TRUE
+award,2015,2015,"Vice Chancellors Natural Science Excellence Scholarship, Massey University ($15,000)",,,TRUE,TRUE,TRUE
+grant,2025,2025,"Mana Tūāpapa Future Leader Fellowship ($820,000 NZD) - Independent 4-year fellowship to explore Daphnia microbial ecology",,,TRUE,TRUE,TRUE
+grant,2025,2025,"Te Pūnaha Matatini Seed Fund ($4,880 NZD)",,,TRUE,FALSE,TRUE
+grant,2025,2025,"ISME Scholar Mobility Award ($3,000 NZD)",,,TRUE,FALSE,TRUE
+grant,2025,2025,"Emerging Researchers Network - Seed Fund ($2,500 NZD)",,,TRUE,FALSE,TRUE
+grant,2025,2025,"Genetics Society of Australasia - Workshop Support Fund ($1,000 NZD)",,,TRUE,FALSE,TRUE
+grant,2025,2025,"Center for Computational Evolution - Workshop Fund Award ($3,500 NZD)",,,TRUE,FALSE,TRUE
+grant,2025,2025,"Genomics Aotearoa - Workshop Fund Award ($5,000 NZD)",,,TRUE,FALSE,TRUE
+grant,2024,2024,"University of Auckland Research Fellow Society Seed Funding ($5,000)",,,TRUE,FALSE,TRUE
+service,2025-present,2025,Co-chair - University of Auckland Faculty of Science Research Fellow Society,,,TRUE,FALSE,TRUE
+service,2025-present,2025,Member - University of Auckland Faculty of Science Research Committee,,,TRUE,FALSE,TRUE
+service,2024,2024,EEB Representative - University of Auckland Faculty of Science Research Fellow Society,,,TRUE,FALSE,TRUE
+prof-dev,2026,2026,Visiting Scholar - KU Leuven,,,TRUE,FALSE,TRUE
+prof-dev,2020,2020,Invited participant - Ira Moana Investigator Workshop,,,TRUE,FALSE,TRUE
+prof-dev,2019,2019,Invited participant - Ira Moana Project Early Career Workshop,,,TRUE,FALSE,TRUE
+teaching,,0,Contributed course material — BIOSCI 761,University of Auckland,,TRUE,FALSE,TRUE
+teaching,,0,Workshop instructor — SLiM eco-evolutionary simulation workshop,,,TRUE,FALSE,TRUE
+teaching,,0,Workshop instructor (upcoming) — eDNA bioinformatics workshop,,,TRUE,FALSE,TRUE
+teaching,,0,Undergraduate teaching laboratory instructor/demonstrator,,,TRUE,FALSE,TRUE
+teaching,,0,Postgraduate student supervision (multiple students),,,TRUE,FALSE,TRUE
+talk,2024,2024,Invited talk — Center for Computational Evolution's 2024 Research Showcase,,,TRUE,FALSE,TRUE
+talk,2022,2022,Conference presentation — New Zealand Molecular Ecology Conference (awarded Best PhD Presentation),,,TRUE,FALSE,TRUE
+talk,2020,2020,Conference presentation — New Zealand Molecular Ecology Conference (awarded Best PhD Presentation),,,TRUE,FALSE,TRUE
+talk,2020,2020,Invited participant — Ira Moana Investigator Workshop,,,TRUE,FALSE,TRUE
+talk,2019,2019,Invited participant — Ira Moana Project Early Career Workshop,,,TRUE,FALSE,TRUE
+talk,2017,2017,Conference presentation — New Zealand Molecular Ecology Conference (awarded Best Student Presentation),,,TRUE,FALSE,TRUE

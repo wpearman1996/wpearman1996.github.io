@@ -15,6 +15,73 @@ load_meta <- function() {
   yaml::read_yaml(here::here("content", "cv_meta.yml"))
 }
 
+# --- content/cv_entries.csv: single source of truth for education,
+# positions, awards, grants, service, professional development, teaching,
+# and talks. Add/edit rows directly in that CSV -- no code changes needed.
+# Columns:
+#   section        education | position | award | grant | service |
+#                  prof-dev | teaching | talk
+#   year           display text, e.g. "2023", "2025-present", "2024–"
+#   sort_year      numeric year used to order rows (teaching rows that
+#                  have no date use 0 and keep their CSV row order)
+#   title          the main text (degree, job title, or entry description)
+#   where          institution/organisation (education & position only)
+#   location       city, country (education & position only)
+#   show_full_cv, show_onepage_cv, show_website
+#                  TRUE/FALSE -- controls which of the three outputs
+#                  (full PDF CV, condensed 1-page PDF CV, website CV page)
+#                  include that row. Edit these directly to add or hide
+#                  content per view.
+cv_entries <- function(section = NULL, view = NULL) {
+  d <- readr::read_csv(here::here("content", "cv_entries.csv"), show_col_types = FALSE)
+  if (!is.null(section)) d <- d |> filter(.data$section %in% .env$section)
+  if (!is.null(view)) {
+    col <- paste0("show_", view)
+    d <- d[d[[col]], ]
+  }
+  d |> arrange(desc(sort_year))
+}
+
+education_tibble <- function(view = "website") cv_entries("education", view)
+positions_tibble <- function(view = "website") cv_entries("position", view)
+
+# Prose renderers for the website's education/position entries (bold
+# title, then institution/location/year in one line) -- the PDF CVs
+# instead build their own year|title kable() tables straight from
+# education_tibble()/positions_tibble() since they show year as its own
+# column.
+render_cv_education <- function(view = "website") {
+  ed <- education_tibble(view)
+  if (nrow(ed) == 0) return("")
+  glue::glue_collapse(
+    glue::glue("**{ed$title}** — {ed$where}, {ed$location} ({ed$year})"),
+    sep = "\n\n"
+  )
+}
+
+render_cv_positions <- function(view = "website") {
+  pos <- positions_tibble(view)
+  if (nrow(pos) == 0) return("")
+  glue::glue_collapse(
+    glue::glue("**{pos$title}**, {pos$where}, {pos$location} ({pos$year})"),
+    sep = "\n\n"
+  )
+}
+
+# Generic renderer for the "- year — title" sections (awards, grants,
+# service, prof-dev, talks) or the year-less "- title" bullets (teaching).
+# Used by the website CV page; the PDF CVs build their own kable() tables
+# straight from cv_entries() since they show year/title in separate columns.
+render_cv_section <- function(section, view = "full_cv") {
+  d <- cv_entries(section, view)
+  if (nrow(d) == 0) return("")
+  if (section == "teaching") {
+    glue::glue_collapse(glue::glue("- {d$title}"), sep = "\n")
+  } else {
+    glue::glue_collapse(glue::glue("- {d$year} — {d$title}"), sep = "\n")
+  }
+}
+
 # Fuzzy-match a bibliographic title against the cached Scholar pub list
 # (titles differ slightly in punctuation/case between sources) and return
 # the citation count, or NA if no confident match is found.
@@ -33,7 +100,10 @@ match_scholar_cites <- function(title, scholar_pubs) {
   as.numeric(scholar_pubs$cites[hit[1]])
 }
 
-load_pubs <- function() {
+# content/pubs.csv has the same show_full_cv/show_onepage_cv/show_website
+# columns as cv_entries.csv -- pass view = NULL to get every publication
+# regardless of visibility flags.
+load_pubs <- function(view = "full_cv") {
   pubs <- readr::read_csv(here::here("content", "pubs.csv"), show_col_types = FALSE)
   scholar_path <- here::here("content", "scholar_pubs.csv")
   if (file.exists(scholar_path)) {
@@ -41,6 +111,10 @@ load_pubs <- function() {
     pubs$cites <- vapply(pubs$title, match_scholar_cites, double(1), scholar_pubs = scholar_pubs)
   } else {
     pubs$cites <- NA_integer_
+  }
+  if (!is.null(view)) {
+    col <- paste0("show_", view)
+    pubs <- pubs[pubs[[col]], ]
   }
   pubs |> arrange(desc(index))
 }
@@ -66,6 +140,18 @@ format_pub_citation <- function(pub) {
   # normally -- no more LaTeX unbreakable-token overflow risk.
   doi_str <- glue("[doi:{pub$doi}](https://doi.org/{pub$doi})")
   paste(authors_str, year_str, title_str, journal_str, doi_str)
+}
+
+render_cv_publications <- function(view = "full_cv") {
+  # Uses "**N.**" instead of markdown "N." list syntax, because pandoc
+  # auto-increments real ordered lists and ignores our own numbering.
+  pubs <- load_pubs(view)
+  if (nrow(pubs) == 0) return("")
+  lines <- vapply(seq_len(nrow(pubs)), function(i) {
+    pub <- pubs[i, ]
+    glue::glue("**{pub$index}.** {format_pub_citation(pub)}")
+  }, character(1))
+  paste(lines, collapse = "\n\n")
 }
 
 make_pub_list <- function(pubs) {
@@ -101,87 +187,6 @@ icon_link <- function(icon = NULL, text = NULL, url = NULL, class = "icon-link",
   htmltools::a(href = url, label, class = class, target = target, rel = "noopener")
 }
 
-# --- Plain-markdown CV renderers (shared by cv.qmd and cv-pdf.qmd so the
-# HTML and PDF versions always stay in sync with the same source data) ---
-
-render_cv_education <- function() {
-  ed <- education_tibble()
-  glue::glue_collapse(
-    glue::glue("**{ed$degree}** — {ed$institution}, {ed$location} ({ed$year})"),
-    sep = "\n\n"
-  )
-}
-
-render_cv_positions <- function() {
-  pos <- positions_tibble()
-  glue::glue_collapse(
-    glue::glue("**{pos$title}**, {pos$institution}, {pos$location} ({pos$dates})"),
-    sep = "\n\n"
-  )
-}
-
-distinctions_tibble <- function(category = NULL) {
-  # .env$category (not bare `category`) is required: dplyr's data mask
-  # resolves an unqualified name against the data frame's own columns
-  # first, and this data frame already has a column called "category" --
-  # `filter(category %in% category)` would silently compare the column
-  # to itself (always TRUE) instead of to this function's argument.
-  d <- readr::read_csv(here::here("content", "cv_distinctions.csv"), show_col_types = FALSE)
-  if (!is.null(category)) d <- d |> filter(.data$category %in% .env$category)
-  d
-}
-
-render_cv_distinctions <- function(top_n = NULL, category = NULL) {
-  d <- distinctions_tibble(category = category)
-  if (!is.null(top_n)) d <- head(d, top_n)
-  glue::glue_collapse(
-    glue::glue("- {d$year} — {d$description}"),
-    sep = "\n"
-  )
-}
-
-render_cv_teaching <- function() {
-  t <- readr::read_csv(here::here("content", "cv_teaching.csv"), show_col_types = FALSE)
-  glue::glue_collapse(
-    glue::glue("- {t$description}"),
-    sep = "\n"
-  )
-}
-
-presentations_tibble <- function() {
-  readr::read_csv(here::here("content", "cv_presentations.csv"), show_col_types = FALSE) |>
-    arrange(desc(year))
-}
-
-render_cv_presentations <- function() {
-  p <- presentations_tibble()
-  glue::glue_collapse(
-    glue::glue("- {p$year} — {p$description}"),
-    sep = "\n"
-  )
-}
-
-# Google Scholar summary for the CV PDF sidebar. Plain text with no
-# backslashes/LaTeX commands -- this gets substituted into a
-# double-quoted YAML string, where a literal "\" would break parsing.
-scholar_stats_line <- function() {
-  profile_path <- here::here("content", "scholar_profile.csv")
-  if (!file.exists(profile_path)) return("")
-  p <- readr::read_csv(profile_path, show_col_types = FALSE)
-  glue::glue("{p$total_cites} citations | h-index: {p$h_index} | i10-index: {p$i10_index}")
-}
-
-# --- Tibbles used directly by _cv-pagedown*.Rmd ---
-
-education_tibble <- function() {
-  readr::read_csv(here::here("content", "cv_education.csv"), show_col_types = FALSE) |>
-    arrange(desc(year))
-}
-
-positions_tibble <- function() {
-  readr::read_csv(here::here("content", "cv_positions.csv"), show_col_types = FALSE)
-}
-
 # Strip the protocol from a URL, e.g. "https://example.com/x" -> "example.com/x"
 strip_protocol <- function(url) sub("^https?://", "", url)
 
@@ -192,18 +197,12 @@ url_handle <- function(url) {
   parts[length(parts)]
 }
 
-render_cv_publications <- function(top_n = NULL, rank_by = c("index", "cites")) {
-  # Uses "**N.**" instead of markdown "N." list syntax, because pandoc
-  # auto-increments real ordered lists and ignores our own numbering.
-  rank_by <- match.arg(rank_by)
-  pubs <- load_pubs()
-  if (!is.null(top_n)) {
-    if (rank_by == "cites") pubs <- pubs |> arrange(desc(coalesce(cites, -1)))
-    pubs <- head(pubs, top_n)
-  }
-  lines <- vapply(seq_len(nrow(pubs)), function(i) {
-    pub <- pubs[i, ]
-    glue::glue("**{pub$index}.** {format_pub_citation(pub)}")
-  }, character(1))
-  paste(lines, collapse = "\n\n")
+# Google Scholar summary for the CV PDF sidebar. Plain text with no
+# backslashes/LaTeX commands -- this gets substituted into a
+# double-quoted YAML string, where a literal "\" would break parsing.
+scholar_stats_line <- function() {
+  profile_path <- here::here("content", "scholar_profile.csv")
+  if (!file.exists(profile_path)) return("")
+  p <- readr::read_csv(profile_path, show_col_types = FALSE)
+  glue::glue("{p$total_cites} citations | h-index: {p$h_index} | i10-index: {p$i10_index}")
 }

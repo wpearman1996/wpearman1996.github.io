@@ -5,9 +5,6 @@ output:
     css: ["css/bootstrap-5.2.1.min.css", "css/two-col-cv.css"]
     number_sections: false
 knit: pagedown::chrome_print
-params:
-  n_awards: 6
-  n_pubs: 8
 ---
 
 ```{r setup, include=FALSE}
@@ -18,12 +15,17 @@ library(fontawesome)
 library(knitr)
 source("_common.R")
 meta <- load_meta()
+view <- "onepage_cv"
 
 year_table <- function(d, year_col, text_col) {
   d |>
     transmute(Year = .data[[year_col]], What = .data[[text_col]]) |>
     kable(col.names = c("", ""), escape = FALSE)
 }
+
+# Section content is entirely driven by content/cv_entries.csv's
+# show_onepage_cv column (and content/pubs.csv's show_onepage_cv) -- to
+# change what appears here, flip those flags rather than editing this file.
 ```
 
 ::: {.row}
@@ -62,8 +64,8 @@ I am a broadly trained molecular and microbial ecologist specialising in populat
 # Education
 
 ```{r}
-education_tibble() |>
-  mutate(what = glue("<span class='cv-entry-title'>{degree}</span>, {institution}, {location}")) |>
+cv_entries("education", view) |>
+  mutate(what = glue("<span class='cv-entry-title'>{title}</span>, {where}, {location}")) |>
   year_table("year", "what")
 ```
 
@@ -74,10 +76,23 @@ education_tibble() |>
 # Awards and honours
 
 ```{r}
-distinctions_tibble(category = "award") |>
-  arrange(desc(year)) |>
-  head(params$n_awards) |>
-  year_table("year", "description")
+cv_entries("award", view) |>
+  year_table("year", "title")
+```
+
+::::::
+
+:::
+
+::: {.row}
+
+:::::: {.col-12}
+
+# Selected major grants
+
+```{r}
+cv_entries("grant", view) |>
+  year_table("year", "title")
 ```
 
 ::::::
@@ -92,7 +107,7 @@ distinctions_tibble(category = "award") |>
 
 ```{r}
 #| results: asis
-cat(render_cv_publications(top_n = params$n_pubs, rank_by = "cites"))
+cat(render_cv_publications(view))
 ```
 
 ::::::

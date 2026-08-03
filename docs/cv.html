@@ -173,8 +173,10 @@ subdirectory of pages, copy this file into it too.
   <li><a href="#research-speciality" id="toc-research-speciality" class="nav-link active" data-scroll-target="#research-speciality">Research Speciality</a></li>
   <li><a href="#education" id="toc-education" class="nav-link" data-scroll-target="#education">Education</a></li>
   <li><a href="#positions" id="toc-positions" class="nav-link" data-scroll-target="#positions">Positions</a></li>
-  <li><a href="#distinctions-grants-memberships" id="toc-distinctions-grants-memberships" class="nav-link" data-scroll-target="#distinctions-grants-memberships">Distinctions, Grants &amp; Memberships</a></li>
+  <li><a href="#awards-and-honours" id="toc-awards-and-honours" class="nav-link" data-scroll-target="#awards-and-honours">Awards and Honours</a></li>
+  <li><a href="#selected-major-grants" id="toc-selected-major-grants" class="nav-link" data-scroll-target="#selected-major-grants">Selected Major Grants</a></li>
   <li><a href="#service-outreach" id="toc-service-outreach" class="nav-link" data-scroll-target="#service-outreach">Service &amp; Outreach</a></li>
+  <li><a href="#professional-development" id="toc-professional-development" class="nav-link" data-scroll-target="#professional-development">Professional Development</a></li>
   <li><a href="#teaching" id="toc-teaching" class="nav-link" data-scroll-target="#teaching">Teaching</a></li>
   <li><a href="#conference-presentations-invited-talks" id="toc-conference-presentations-invited-talks" class="nav-link" data-scroll-target="#conference-presentations-invited-talks">Conference Presentations &amp; Invited Talks</a></li>
   <li><a href="#publications" id="toc-publications" class="nav-link" data-scroll-target="#publications">Publications</a></li>
@@ -206,11 +208,12 @@ subdirectory of pages, copy this file into it too.
 <p><a href="cv.pdf" class="icon-link" target="_self" rel="noopener"><i class="fa-solid fa-file-arrow-down"></i> Download as PDF</a> <a href="cv-1page.pdf" class="icon-link" target="_self" rel="noopener"><i class="fa-solid fa-file-lines"></i> Download 1-Page CV</a> <a href="https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&amp;hl=en" class="icon-link" target="_blank" rel="noopener"><i class="ai ai-google-scholar"></i> Google Scholar</a></p>
 <p><strong>Research Fellow</strong>, University of Auckland &nbsp;|&nbsp; william.pearman@auckland.ac.nz &nbsp;|&nbsp; <a href="https://profiles.auckland.ac.nz/william-pearman">profile</a></p>
 <!--
-Shared CV body, included by cv.qmd (HTML). The PDFs (_cv-pagedown.Rmd,
-_cv-pagedown-onepage.Rmd) use the same content/cv_*.csv, content/pubs.csv,
-and content/cv_meta.yml sources via _common.R, but have their own body
-since pagedown's bootstrap-grid layout needs a different structure --
-edit the content/ files, not this one.
+Shared CV body, included by cv.qmd (HTML). Content comes from
+content/cv_entries.csv, content/pubs.csv, and content/cv_meta.yml via
+_common.R -- edit those files (in particular, the show_website column)
+to add/remove content here, not this one. The PDFs (_cv-pagedown.Rmd,
+_cv-pagedown-onepage.Rmd) read the same sources but have their own body
+since pagedown's bootstrap-grid layout needs a different structure.
 -->
 <section id="research-speciality" class="level2">
 <h2 class="anchored" data-anchor-id="research-speciality">Research Speciality</h2>
@@ -227,28 +230,13 @@ edit the content/ files, not this one.
 <p><strong>Research Fellow</strong>, University of Auckland, Auckland, New Zealand (2024–)</p>
 <p><strong>Assistant Research Fellow / Lab Manager</strong>, University of Otago, Dunedin, New Zealand (2023)</p>
 </section>
-<section id="distinctions-grants-memberships" class="level2">
-<h2 class="anchored" data-anchor-id="distinctions-grants-memberships">Distinctions, Grants &amp; Memberships</h2>
+<section id="awards-and-honours" class="level2">
+<h2 class="anchored" data-anchor-id="awards-and-honours">Awards and Honours</h2>
 <ul>
-<li>2026 — Visiting Scholar - KU Leuven</li>
-<li>2025-present — Co-chair - University of Auckland Faculty of Science Research Fellow Society</li>
-<li>2025-present — Member - University of Auckland Faculty of Science Research Committee</li>
-<li>2025 — Mana Tūāpapa Future Leader Fellowship ($820,000 NZD) - Independent 4-year fellowship to explore Daphnia microbial ecology</li>
-<li>2025 — Te Pūnaha Matatini Seed Fund ($4,880 NZD)</li>
-<li>2025 — ISME Scholar Mobility Award ($3,000 NZD)</li>
-<li>2025 — Emerging Researchers Network - Seed Fund ($2,500 NZD)</li>
-<li>2025 — Genetics Society of Australasia - Workshop Support Fund ($1,000 NZD)</li>
-<li>2025 — Center for Computational Evolution - Workshop Fund Award ($3,500 NZD)</li>
-<li>2025 — Genomics Aotearoa - Workshop Fund Award ($5,000 NZD)</li>
-<li>2024 — EEB Representative - University of Auckland Faculty of Science Research Fellow Society</li>
-<li>2024 — University of Auckland Research Fellow Society Seed Funding ($5,000)</li>
-<li>2024 — Invited Speaker - Center for Computational Evolution’s 2024 Research Showcase</li>
 <li>2022 — Best PhD Presentation - New Zealand Molecular Ecology Conference</li>
 <li>2020 — Best PhD Presentation - New Zealand Molecular Ecology Conference</li>
 <li>2020 — New Zealand Marine Sciences Society Student Research Award ($1,500)</li>
 <li>2020 — University of Otago Doctoral Scholarship ($27,500)</li>
-<li>2020 — Invited participant - Ira Moana Investigator Workshop</li>
-<li>2019 — Invited participant - Ira Moana Project Early Career Workshop</li>
 <li>2019 — Massey University Masters Scholarship ($15,000)</li>
 <li>2018 — Presentation Bursary - Oxford Nanopore Technologies</li>
 <li>2018 — Massey Graduate Scholarship, Sciences - Massey University ($5,000)</li>
@@ -257,16 +245,40 @@ edit the content/ files, not this one.
 <li>2015 — Vice Chancellors Natural Science Excellence Scholarship, Massey University ($15,000)</li>
 </ul>
 </section>
+<section id="selected-major-grants" class="level2">
+<h2 class="anchored" data-anchor-id="selected-major-grants">Selected Major Grants</h2>
+<ul>
+<li>2025 — Mana Tūāpapa Future Leader Fellowship ($820,000 NZD) - Independent 4-year fellowship to explore Daphnia microbial ecology</li>
+<li>2025 — Te Pūnaha Matatini Seed Fund ($4,880 NZD)</li>
+<li>2025 — ISME Scholar Mobility Award ($3,000 NZD)</li>
+<li>2025 — Emerging Researchers Network - Seed Fund ($2,500 NZD)</li>
+<li>2025 — Genetics Society of Australasia - Workshop Support Fund ($1,000 NZD)</li>
+<li>2025 — Center for Computational Evolution - Workshop Fund Award ($3,500 NZD)</li>
+<li>2025 — Genomics Aotearoa - Workshop Fund Award ($5,000 NZD)</li>
+<li>2024 — University of Auckland Research Fellow Society Seed Funding ($5,000)</li>
+</ul>
+</section>
 <section id="service-outreach" class="level2">
 <h2 class="anchored" data-anchor-id="service-outreach">Service &amp; Outreach</h2>
 <ul>
+<li>2025-present — Co-chair - University of Auckland Faculty of Science Research Fellow Society</li>
+<li>2025-present — Member - University of Auckland Faculty of Science Research Committee</li>
+<li>2024 — EEB Representative - University of Auckland Faculty of Science Research Fellow Society</li>
 <li>Peer review: Journal of Phycology, Journal of Biogeography, Molecular Ecology, Molecular Ecology Resources</li>
+</ul>
+</section>
+<section id="professional-development" class="level2">
+<h2 class="anchored" data-anchor-id="professional-development">Professional Development</h2>
+<ul>
+<li>2026 — Visiting Scholar - KU Leuven</li>
+<li>2020 — Invited participant - Ira Moana Investigator Workshop</li>
+<li>2019 — Invited participant - Ira Moana Project Early Career Workshop</li>
 </ul>
 </section>
 <section id="teaching" class="level2">
 <h2 class="anchored" data-anchor-id="teaching">Teaching</h2>
 <ul>
-<li>Contributed course material — BIOSCI 761, University of Auckland</li>
+<li>Contributed course material — BIOSCI 761</li>
 <li>Workshop instructor — SLiM eco-evolutionary simulation workshop</li>
 <li>Workshop instructor (upcoming) — eDNA bioinformatics workshop</li>
 <li>Undergraduate teaching laboratory instructor/demonstrator</li>
