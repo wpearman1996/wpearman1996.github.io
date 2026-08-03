@@ -115,12 +115,40 @@ render_cv_positions <- function() {
   )
 }
 
-render_cv_distinctions <- function() {
+render_cv_distinctions <- function(top_n = NULL) {
   d <- readr::read_csv(here::here("content", "cv_distinctions.csv"), show_col_types = FALSE)
+  if (!is.null(top_n)) d <- head(d, top_n)
   glue::glue_collapse(
     glue::glue("- {d$year} — {d$description}"),
     sep = "\n"
   )
+}
+
+render_cv_teaching <- function() {
+  t <- readr::read_csv(here::here("content", "cv_teaching.csv"), show_col_types = FALSE)
+  glue::glue_collapse(
+    glue::glue("- {t$description}"),
+    sep = "\n"
+  )
+}
+
+render_cv_presentations <- function() {
+  p <- readr::read_csv(here::here("content", "cv_presentations.csv"), show_col_types = FALSE) |>
+    arrange(desc(year))
+  glue::glue_collapse(
+    glue::glue("- {p$year} — {p$description}"),
+    sep = "\n"
+  )
+}
+
+# Google Scholar summary for the CV PDF sidebar. Plain text with no
+# backslashes/LaTeX commands -- this gets substituted into a
+# double-quoted YAML string, where a literal "\" would break parsing.
+scholar_stats_line <- function() {
+  profile_path <- here::here("content", "scholar_profile.csv")
+  if (!file.exists(profile_path)) return("")
+  p <- readr::read_csv(profile_path, show_col_types = FALSE)
+  glue::glue("{p$total_cites} citations | h-index: {p$h_index} | i10-index: {p$i10_index}")
 }
 
 # --- Tibbles for vitae::detailed_entries() (used by the twentyseconds PDF) ---
@@ -144,10 +172,15 @@ url_handle <- function(url) {
   parts[length(parts)]
 }
 
-render_cv_publications <- function() {
+render_cv_publications <- function(top_n = NULL, rank_by = c("index", "cites")) {
   # Uses "**N.**" instead of markdown "N." list syntax, because pandoc
   # auto-increments real ordered lists and ignores our own numbering.
+  rank_by <- match.arg(rank_by)
   pubs <- load_pubs()
+  if (!is.null(top_n)) {
+    if (rank_by == "cites") pubs <- pubs |> arrange(desc(coalesce(cites, -1)))
+    pubs <- head(pubs, top_n)
+  }
   lines <- vapply(seq_len(nrow(pubs)), function(i) {
     pub <- pubs[i, ]
     glue::glue("**{pub$index}.** {format_pub_citation(pub)}")

@@ -1,9 +1,10 @@
 ---
-# Contact fields are duplicated from content/cv_meta.yml here because the
-# vitae::twentyseconds template reads its sidebar straight from this YAML
-# header (not evaluated R) -- update both if contact info changes. The
-# actual CV content below (education, positions, grants, publications) all
-# comes from content/cv_*.csv via _common.R, same as the website's cv.qmd.
+# See _cv-pdf.Rmd for notes on why contact fields are duplicated here.
+# This is a condensed, one-page variant: trimmed distinctions list and
+# only the most-cited publications (ranked using content/scholar_pubs.csv),
+# no Teaching/Presentations sections. `params.n_distinctions`/`n_pubs`
+# below are the defaults when rendered directly; render_cv_pdf_onepage.R
+# overrides them and searches for values that fill exactly one page.
 name: "William"
 surname: "Pearman"
 position: "Research Fellow"
@@ -19,6 +20,9 @@ date: "`r format(Sys.Date(), '%B %Y')`"
 output: vitae::twentyseconds
 header-includes:
   - \hypersetup{colorlinks=true, linkcolor=mainblue, urlcolor=mainblue}
+params:
+  n_distinctions: 6
+  n_pubs: 6
 ---
 
 ```{r setup, include=FALSE}
@@ -28,9 +32,7 @@ source("_common.R")
 meta <- load_meta()
 ```
 
-# Research Speciality
-
-`r meta$speciality`
+I am a broadly trained molecular and microbial ecologist specialising in population genomics and microbial ecology, developing eco-evolutionary simulations of host-microbe (holobiont) relationships tested against observational and experimental data.
 
 # Education
 
@@ -50,33 +52,12 @@ positions_tibble() |>
 
 ```{r}
 #| results: asis
-cat(render_cv_distinctions())
+cat(render_cv_distinctions(top_n = params$n_distinctions))
 ```
 
-# Service & Outreach
+# Selected Publications
 
 ```{r}
 #| results: asis
-cat(paste0("- Peer review: ", paste(meta$peer_review, collapse = ", ")))
-```
-
-# Teaching
-
-```{r}
-#| results: asis
-cat(render_cv_teaching())
-```
-
-# Conference Presentations & Invited Talks
-
-```{r}
-#| results: asis
-cat(render_cv_presentations())
-```
-
-# Publications
-
-```{r}
-#| results: asis
-cat(render_cv_publications())
+cat(render_cv_publications(top_n = params$n_pubs, rank_by = "cites"))
 ```

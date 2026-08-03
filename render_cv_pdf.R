@@ -9,13 +9,8 @@
 #   quarto render && Rscript render_cv_pdf.R
 #
 # Re-run whenever content/cv_*.csv, content/pubs.csv, or _cv-pdf.Rmd change.
+# See also render_cv_pdf_onepage.R for the condensed one-page variant.
 
-pandoc_dir <- file.path(
-  "/Applications/quarto/bin/tools",
-  if (Sys.info()[["machine"]] == "arm64") "aarch64" else "x86_64"
-)
-if (nzchar(Sys.which("pandoc")) == FALSE) {
-  Sys.setenv(RSTUDIO_PANDOC = pandoc_dir)
-}
+source("_cv_render_setup.R")
 
 rmarkdown::render("_cv-pdf.Rmd", output_file = "cv.pdf", output_dir = "docs")

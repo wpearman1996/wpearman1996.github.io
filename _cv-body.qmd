@@ -1,7 +1,9 @@
 <!--
-Shared CV body, included by both cv.qmd (HTML) and cv-pdf.qmd (PDF).
-Content lives in content/cv_*.csv, content/pubs.csv, and content/cv_meta.yml
--- edit those, not this file.
+Shared CV body, included by cv.qmd (HTML). The PDF (_cv-pdf.Rmd) uses the
+same content/cv_*.csv, content/pubs.csv, and content/cv_meta.yml sources
+via _common.R, but has its own body since vitae::twentyseconds needs a
+different structure (detailed_entries() tables, sidebar fields, etc.)
+-- edit the content/ files, not this one.
 -->
 
 ## Research Speciality
@@ -34,6 +36,20 @@ cat(render_cv_distinctions())
 ```{r}
 #| output: asis
 cat(paste0("- Peer review: ", paste(meta$peer_review, collapse = ", ")))
+```
+
+## Teaching
+
+```{r}
+#| output: asis
+cat(render_cv_teaching())
+```
+
+## Conference Presentations & Invited Talks
+
+```{r}
+#| output: asis
+cat(render_cv_presentations())
 ```
 
 ## Publications
