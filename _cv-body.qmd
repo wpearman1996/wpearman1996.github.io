@@ -1,0 +1,44 @@
+<!--
+Shared CV body, included by both cv.qmd (HTML) and cv-pdf.qmd (PDF).
+Content lives in content/cv_*.csv, content/pubs.csv, and content/cv_meta.yml
+-- edit those, not this file.
+-->
+
+## Research Speciality
+
+`r meta$speciality`
+
+## Education
+
+```{r}
+#| output: asis
+cat(render_cv_education())
+```
+
+## Positions
+
+```{r}
+#| output: asis
+cat(render_cv_positions())
+```
+
+## Distinctions, Grants & Memberships
+
+```{r}
+#| output: asis
+cat(render_cv_distinctions())
+```
+
+## Service & Outreach
+
+```{r}
+#| output: asis
+cat(paste0("- Peer review: ", paste(meta$peer_review, collapse = ", ")))
+```
+
+## Publications
+
+```{r}
+#| output: asis
+cat(render_cv_publications())
+```

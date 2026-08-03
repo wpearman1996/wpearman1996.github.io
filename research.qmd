@@ -1,0 +1,31 @@
+---
+title: "Research"
+description: "Population genomics, microbial ecology, and the evolution of host-microbe relationships."
+execute:
+  echo: false
+  message: false
+  warning: false
+toc: true
+toc-location: left
+---
+
+```{r setup}
+source("_common.R")
+meta <- load_meta()
+pubs <- load_pubs()
+```
+
+<center>
+`r icon_link(icon = "ai ai-google-scholar", text = "Google Scholar", url = meta$scholar_url)`
+`r icon_link(icon = "fa-solid fa-chart-simple", text = "Citation Metrics", url = "metrics.qmd", target = "_self")`
+`r icon_link(icon = "fa-solid fa-file-arrow-down", text = "Full CV", url = "cv.qmd", target = "_self")`
+</center>
+
+<br>
+
+## Peer-Reviewed Journal Articles
+
+```{r}
+#| output: asis
+make_pub_list(pubs)
+```

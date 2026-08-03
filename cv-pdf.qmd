@@ -1,5 +1,5 @@
 ---
-title: "William Pearman"
+title: "William S. Pearman"
 subtitle: "Curriculum Vitae"
 format:
   pdf:
@@ -9,6 +9,17 @@ format:
     colorlinks: true
     toc: false
 output-file: "cv"
+execute:
+  echo: false
+  message: false
+  warning: false
 ---
 
-{{< include _cv-content.qmd >}}
+```{r setup}
+source("_common.R")
+meta <- load_meta()
+```
+
+`r meta$position`, `r meta$employer` | `r meta$email` | [profile](`r meta$website`) | [Google Scholar](`r meta$scholar_url`)
+
+{{< include _cv-body.qmd >}}

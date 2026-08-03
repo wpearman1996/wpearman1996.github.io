@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Citation metrics from Google Scholar.">
 
-<title>William Pearman – Hardy-Weinberg Filtering on Pop Gen Data</title>
+<title>William Pearman – Research Metrics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +24,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../profile.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./profile.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -83,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">William Pearman</span>
     </a>
   </div>
@@ -94,31 +95,31 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../research.html"> 
+    <a class="nav-link" href="./research.html"> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../metrics.html"> 
+    <a class="nav-link active" href="./metrics.html" aria-current="page"> 
 <span class="menu-text">Metrics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../projects/index.html"> 
+    <a class="nav-link" href="./projects/index.html"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../talks/index.html"> 
+    <a class="nav-link" href="./talks/index.html"> 
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
+    <a class="nav-link" href="./blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../cv.html"> 
+    <a class="nav-link" href="./cv.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -132,22 +133,29 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#citations-by-year" id="toc-citations-by-year" class="nav-link active" data-scroll-target="#citations-by-year">Citations by Year</a></li>
+  <li><a href="#most-cited-papers" id="toc-most-cited-papers" class="nav-link" data-scroll-target="#most-cited-papers">Most-Cited Papers</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hardy-Weinberg Filtering on Pop Gen Data</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">news</div>
-    <div class="quarto-category">code</div>
-    <div class="quarto-category">analysis</div>
-  </div>
-  </div>
+<h1 class="title">Research Metrics</h1>
+</div>
 
+<div>
+  <div class="description">
+    Citation metrics from Google Scholar.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -162,9 +170,167 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In this project I use EHR to explore the hospital transfers.</p>
+<center>
+<a href="https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&amp;hl=en" class="icon-link" target="_blank" rel="noopener"><i class="ai ai-google-scholar"></i> View on Google Scholar</a>
+</center>
+<div class="stat-card-row">
+<div class="stat-card">
+<div class="stat-value">
+477
+</div>
+<div class="stat-label">
+Total Citations
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">
+8
+</div>
+<div class="stat-label">
+h-index
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">
+8
+</div>
+<div class="stat-label">
+i10-index
+</div>
+</div>
+</div>
+<section id="citations-by-year" class="level2">
+<h2 class="anchored" data-anchor-id="citations-by-year">Citations by Year</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="most-cited-papers" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="most-cited-papers">Most-Cited Papers</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 67%">
+<col style="width: 24%">
+<col style="width: 2%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Journal</th>
+<th style="text-align: right;">Year</th>
+<th style="text-align: right;">Citations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Testing the advantages and disadvantages of short-and long-read eukaryotic metagenomics using simulated reads</td>
+<td style="text-align: left;">BMC Bioinformatics</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Commonly used Hardy–Weinberg equilibrium filtering schemes impact population structure inferences using RADseq data</td>
+<td style="text-align: left;">Molecular Ecology Resources</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Southern Hemisphere coasts are biologically connected by frequent, long-distance rafting events</td>
+<td style="text-align: left;">Current Biology</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MARES, a replicable pipeline and curated reference database for marine eukaryote metabarcoding</td>
+<td style="text-align: left;">Scientific Data</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">49</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Macroalgal microbiome biogeography is shaped by environmental drivers rather than geographic distance</td>
+<td style="text-align: left;">Annals of Botany, mcad</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Meta‐analysis of Antarctic phylogeography reveals strong sampling bias and critical knowledge gaps</td>
+<td style="text-align: left;">Ecography, e</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A cry for kelp: Evidence for polyphenolic inhibition of Oxford Nanopore sequencing of brown algae</td>
+<td style="text-align: left;">Journal of phycology</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Concordant geographic and genetic structure revealed by genotyping‐by‐sequencing in a New Zealand marine isopod</td>
+<td style="text-align: left;">Ecology and Evolution</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Host dispersal relaxes selective pressures in rafting microbiomes and triggers successional changes</td>
+<td style="text-align: left;">Nature Communications</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The future of molecular ecology in Aotearoa New Zealand: an early career perspective</td>
+<td style="text-align: left;">Journal of the Royal Society of New Zealand</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Marine phytoplankton impose strong selective pressures on in vitro microbiome assembly, but drift is the dominant process</td>
+<td style="text-align: left;">ISME Communications, ycaf</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Host population crashes disrupt the diversity of associated marine microbiomes</td>
+<td style="text-align: left;">Environmental Microbiology</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Long-read sequencing reveals atypical mitochondrial genome structure in a New Zealand marine isopod</td>
+<td style="text-align: left;">Royal Society Open Science</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Targeted Airborne e DNA of an Invasive Wallaby: Effects of Sampler Type, Distance, and Environmental Conditions</td>
+<td style="text-align: left;">Environmental DNA</td>
+<td style="text-align: right;">2026</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recovering Historical eDNA From Museum‐Preserved Filter Feeders via Non‐Destructive Metabarcoding</td>
+<td style="text-align: left;">Molecular Ecology Resources</td>
+<td style="text-align: right;">2026</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<aside>
+Data last refreshed August 03, 2026. Google Scholar rate-limits automated requests, so these numbers are cached rather than live — run <code>refresh_scholar_data.R</code> to update them.
+</aside>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -610,5 +776,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

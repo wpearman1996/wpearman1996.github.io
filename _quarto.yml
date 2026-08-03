@@ -3,44 +3,40 @@ project:
   output-dir: docs
 
 website:
-  page-navigation: true
   title: "William Pearman"
-
-  page-footer:
-    left: "&copy; Copyright 2024, Author"
-    right: "This page is built with ❤️ and [Quarto](https://quarto.org/)."
-
-  sidebar:
-    pinned: true
-    align: center
-    style: "docked"
-    collapse-level: 1
-    contents:
-
+  description: "Personal website of William Pearman, molecular and microbial ecologist"
+  site-url: https://wpearman1996.github.io/
+  favicon: profile.png
+  page-navigation: true
+  search:
+    location: navbar
+    type: overlay
+  navbar:
+    right:
+      - text: "About"
+        href: about.qmd
+      - text: "Research"
+        href: research.qmd
+      - text: "Metrics"
+        href: metrics.qmd
       - text: "Projects"
         href: projects/index.qmd
-
       - text: "Talks"
         href: talks/index.qmd
-
       - text: "Blog"
         href: blog.qmd
-
       - text: "CV"
         href: cv.qmd
 
-      - section: "About"
-        contents:
-          - text: "About me"
-            href: about.qmd
-          - text: "This template"
-            href: about_template.qmd
-
+  page-footer:
+    center: "<a href='cv.pdf'>CV</a> &nbsp;<a href='https://github.com/wpearman1996' target='_blank'><i class='bi bi-github'></i></a> &nbsp;<a href='https://twitter.com/WilliamPearman' target='_blank'><i class='bi bi-twitter-x'></i></a> &nbsp;<a href='https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&hl=en' target='_blank'><i class='ai ai-google-scholar fa-lg'></i></a><br>Site made with <i class='bi bi-heart-fill'></i> and <a href='https://quarto.org/' target='_blank'>Quarto</a><br>&copy; 2026 William Pearman"
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme: [default, css/theme.scss]
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    link-external-icon: false
+    include-in-header: "_includes/header.html"
     toc: true
-
-

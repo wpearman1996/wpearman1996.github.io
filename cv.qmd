@@ -1,10 +1,23 @@
 ---
-title: "CV"
+title: "Curriculum Vitae"
 format:
   html:
+    page-layout: article
     toc: true
+execute:
+  echo: false
+  message: false
+  warning: false
 ---
 
-[Download as PDF](cv.pdf){.btn .btn-outline-primary role="button" download="William-Pearman-CV.pdf"}
+```{r setup}
+source("_common.R")
+meta <- load_meta()
+```
 
-{{< include _cv-content.qmd >}}
+`r icon_link(icon = "fa-solid fa-file-arrow-down", text = "Download as PDF", url = "cv.pdf", target = "_self")`
+`r icon_link(icon = "ai ai-google-scholar", text = "Google Scholar", url = meta$scholar_url)`
+
+**`r meta$position`**, `r meta$employer` &nbsp;|&nbsp; `r meta$email` &nbsp;|&nbsp; [profile](`r meta$website`)
+
+{{< include _cv-body.qmd >}}

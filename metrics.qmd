@@ -1,0 +1,58 @@
+---
+title: "Research Metrics"
+description: "Citation metrics from Google Scholar."
+execute:
+  echo: false
+  message: false
+  warning: false
+---
+
+```{r setup}
+source("_common.R")
+library(ggplot2)
+
+meta <- load_meta()
+profile <- readr::read_csv(here::here("content", "scholar_profile.csv"), show_col_types = FALSE)
+history <- readr::read_csv(here::here("content", "scholar_citation_history.csv"), show_col_types = FALSE)
+scholar_pubs <- readr::read_csv(here::here("content", "scholar_pubs.csv"), show_col_types = FALSE) |>
+  dplyr::arrange(dplyr::desc(cites))
+```
+
+<center>
+`r icon_link(icon = "ai ai-google-scholar", text = "View on Google Scholar", url = meta$scholar_url)`
+</center>
+
+```{r}
+#| output: asis
+cat(glue::glue(
+  '<div class="stat-card-row">',
+  '<div class="stat-card"><div class="stat-value">{profile$total_cites}</div><div class="stat-label">Total Citations</div></div>',
+  '<div class="stat-card"><div class="stat-value">{profile$h_index}</div><div class="stat-label">h-index</div></div>',
+  '<div class="stat-card"><div class="stat-value">{profile$i10_index}</div><div class="stat-label">i10-index</div></div>',
+  '</div>'
+))
+```
+
+## Citations by Year
+
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+ggplot(history, aes(x = year, y = cites)) +
+  geom_col(fill = "#2f7a6b") +
+  labs(x = NULL, y = "Citations") +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.minor = element_blank())
+```
+
+## Most-Cited Papers
+
+```{r}
+top <- head(scholar_pubs, 15)
+knitr::kable(
+  top[, c("title", "journal", "year", "cites")],
+  col.names = c("Title", "Journal", "Year", "Citations")
+)
+```
+
+<aside>Data last refreshed `r format(as.Date(profile$fetched_at), "%B %d, %Y")`. Google Scholar rate-limits automated requests, so these numbers are cached rather than live — run `refresh_scholar_data.R` to update them.</aside>

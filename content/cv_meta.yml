@@ -1,0 +1,31 @@
+name: "William S. Pearman"
+title: "Dr"
+position: "Research Fellow"
+employer: "University of Auckland"
+email: "william.pearman@auckland.ac.nz"
+website: "https://profiles.auckland.ac.nz/william-pearman"
+scholar_id: "Gn6BJkoAAAAJ"
+scholar_url: "https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&hl=en"
+github: "https://github.com/wpearman1996"
+twitter: "https://twitter.com/WilliamPearman"
+linkedin: "" # TODO: add real LinkedIn URL
+orcid: "" # TODO: add ORCID if you have one
+speciality: >
+  I am a broadly trained molecular and microbial ecologist with principal
+  expertise in population genomics and microbial ecology. I specialise in
+  developing eco-evolutionary simulations of microbial communities to
+  develop hypotheses which I then test using observational data and
+  experiments. My research background is a combination of population
+  genomics and microbial ecology, with my current research interests
+  working to align these two fields to understand the evolution of
+  host-microbe relationships. My current work combines eco-evolutionary
+  modelling of holobiont evolution, and experimental work with Daphnia to
+  determine microbial contributions to host fitness and to understand
+  host-microbial responses to environmental perturbations. In addition to
+  these areas, I am also actively involved in the application and
+  optimisation of new molecular biology protocols for non-model organisms.
+peer_review:
+  - "Journal of Phycology"
+  - "Journal of Biogeography"
+  - "Molecular Ecology"
+  - "Molecular Ecology Resources"

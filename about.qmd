@@ -1,58 +1,23 @@
 ---
-title: "Author"
-image: profile.png
-about:
-  id: hero-heading
-  template: trestles
-  image-shape: rectangle
-  links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com
-    - icon: linkedin
-      text: LinkedIn
-      href: https://linkedin.com
-    - icon: github
-      text: Github
-      href: https://github.com
+title: "About"
+toc: true
+toc-location: left
 ---
 
-::: {#hero-heading}
+Welcome! I'm a Research Fellow at the [University of Auckland](https://www.auckland.ac.nz/), working at the intersection of population genomics and microbial ecology. See my [CV](cv.qmd) for the full record, or my [Research](research.qmd) page for publications and [citation metrics](metrics.qmd).
 
-I'm William Pearman - at the moment I am a Research Fellow at the University of Auckland, working on host-microbe evolution questions, using simulations. However more broadly I am a molecular ecologist, working on a range of projects from whole genome sequencing and population genomics, eDNA, microbial ecology, and nanopore sequencing of recalcitrant species. 
+## Background
 
+I did my PhD at the University of Otago, in Dunedin, New Zealand, focused on seaweed population genomics and microbiome structure. Before that, I completed a Master of Natural Science (Distinction) and Bachelor of Natural Science at Massey University, both specialising in molecular ecology. I now work as a Research Fellow at the University of Auckland, having previously been an Assistant Research Fellow and Lab Manager at the University of Otago.
 
-I did my PhD at the University of Otago, in Dunedin - New Zealand. My PhD focused on seaweed population genomics and microbiome structure - although I dabble in a variety of various other areas. 
-## Education 
+## Research
 
-* University of Otago, Dunedin, New Zealand
-    *    PhD in Genetics/Marine Biology | 2023
+I am a broadly trained molecular and microbial ecologist with principal expertise in population genomics and microbial ecology. I specialise in developing eco-evolutionary simulations of microbial communities to develop hypotheses which I then test using observational data and experiments.
 
-* Massey University, Auckland, New Zealand
-    *    Masters of Natural Science (Distinction) - speciality: Molecular Ecology | 2020
-    *    Bachelor of Natural Science - speciality: Molecular Ecology | 2018
+My research background is a combination of population genomics and microbial ecology, with my current research interests working to align these two fields to understand the evolution of host-microbe relationships. My current work combines eco-evolutionary modelling of holobiont evolution, and experimental work with *Daphnia* to determine microbial contributions to host fitness and to understand host-microbial responses to environmental perturbations. In addition to these areas, I am also actively involved in the application and optimisation of new molecular biology protocols for non-model organisms.
 
+More than anything, I like solving problems. Most of my work to date has been focussed on interesting questions, or tricky problems - like why some species don't sequence so well with nanopore sequencing.
 
-## Experience
+## Get in Touch
 
-* Extensive experience in R - data visualization, analysis, eDNA/metabarcoding analysis, and simulation
-* Extensive command line bioinformatic experience - genome assembly, variant calling, metagenomic analysis
-* Project management
-* Scientific publishing
-
-
-## Service & Outreach
-* Peer review for:
-    * Journal of Phycology
-    * Journal of Biogeography
-    * Molecular Ecology
-    * Molecular Ecology Resources
-
-* Committee Member - University of Auckland Faculty of Science Reserach Fellow Society
-* Organizer - University of Auckland MicroGroup
-* Invited Speaker to science communication talks, All Saints Church - Birkenhead
-
-
-
-:::
-
+Feel free to get in touch if you want a copy of any of my publications, or if you're interested in collaborating.

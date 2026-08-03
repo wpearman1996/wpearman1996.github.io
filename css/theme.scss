@@ -1,0 +1,228 @@
+@import"https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900";
+@import"https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,600;0,800;0,900&display=swap&text=0123456789";
+
+/*-- scss:defaults --*/
+
+$primary-color: #2f7a6b;
+$blue: #2f7a6b;
+$primary-color-dark: #1c2e33;
+$secondary-color: #d98c3d;
+$secondary-color-trans: rgba(217, 140, 61, 0.2);
+$tertiary-color: #54807b;
+$link-color: $primary-color;
+$body-bg: #f2f6f9;
+$body-color: $primary-color-dark;
+$footer-bg: $primary-color;
+$footer-fg: white;
+$navbar-bg: $body-bg;
+$navbar-fg: $primary-color;
+$navbar-hl: $secondary-color;
+$dropdown-link-color: $primary-color;
+$navbar-font-family: "Raleway";
+$headings-font-family: "Raleway";
+$headings-color: $primary-color-dark;
+$font-family-base: "Raleway";
+$code-block-bg: white;
+$code-block-border: false;
+$code-block-border-right: $navbar-bg !important;
+$code-block-border-radius: 5px;
+$code-color: black;
+$code-bg: $code-block-bg;
+$code-border-radius: 25px;
+$tabset-border-color: $navbar-bg;
+$border-color: $navbar-bg;
+$link-hover-color: $secondary-color;
+$pagination-active-bg: $primary-color;
+$pagination-active-color: white;
+$pagination-active-border-color: $primary-color;
+
+/*-- scss:rules --*/
+
+/*-- Raleway numbers aren't aligned, so use Roboto for numbers only --*/
+
+body {
+  font-family: "Roboto", $font-family-base, sans-serif;
+}
+div.quarto-post .metadata {
+  font-family: "Roboto", $font-family-base, sans-serif;
+}
+
+#title-block-header {
+  margin-block-end: 2rem;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  font-family: "Roboto", $font-family-base, sans-serif;
+  font-weight: 800;
+}
+
+div.quarto-about-trestles .about-entity .about-link {
+    background-color: $primary-color;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border: solid 1.5px;
+    border-color: $primary-color;
+}
+
+div.quarto-about-trestles .about-entity .about-link:hover {
+    background-color: $secondary-color;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border: solid 1.5px;
+    border-color: $secondary-color;
+}
+
+a {
+  text-decoration: underline;
+}
+
+/* navbar */
+
+.nav-link {
+  font-weight: 700;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+    color: $secondary-color;
+}
+
+.nav-link.active {
+    color: $secondary-color !important;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+hr {
+  margin: 0rem 0;
+}
+
+/* Icon-link buttons - used on Research/CV pages */
+
+.icon-link {
+    background-color: $primary-color;
+    color: white;
+    padding: 1px 4px 1px 4px;
+    margin: 1px 1px 1px 1px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
+
+.icon-link:hover {
+    background-color: $secondary-color;
+    color: white;
+    box-shadow: 0px 10px 15px $secondary-color-trans;
+    transform: translateY(-2px);
+}
+
+/* Stat cards - used on Research Metrics dashboard */
+
+.stat-card-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+
+.stat-card {
+  flex: 1 1 160px;
+  background-color: white;
+  border: 1px solid rgba($blue, 0.22);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-family: "Roboto", $font-family-base, sans-serif;
+  font-weight: 900;
+  font-size: 2.25rem;
+  color: $primary-color;
+  line-height: 1.1;
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: $tertiary-color;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* gets rid of the border and reduces padding in tables */
+thead, tbody, tfoot, tr, td, th {
+    border-style: none;
+    padding-bottom: 2px !important;
+}
+
+table[data-quarto-disable-processing] {
+    border: 1px solid $primary-color;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+table[data-quarto-disable-processing] thead tr {
+    background-color: $primary-color;
+}
+
+table[data-quarto-disable-processing] thead th {
+    color: white !important;
+    border-color: $primary-color !important;
+}
+
+table[data-quarto-disable-processing] tbody tr:nth-child(even) {
+    background-color: rgba($blue, 0.06);
+}
+
+table[data-quarto-disable-processing] tbody tr:hover {
+    background-color: rgba($blue, 0.15);
+    transition: background-color 0.15s ease;
+}
+
+/* Margin text (aside) */
+
+aside, .column-margin {
+    color: $tertiary-color;
+    font-size: .825rem;
+}
+
+blockquote {
+    border-left: 0.25rem solid $tertiary-color;
+}
+
+blockquote p {
+    padding: 3px 3px 3px 3px;
+    margin: 0 2px 0 2px;
+    border-radius: 5px;
+    padding-left: 2em;
+    font-style: italic;
+    color: $tertiary-color;
+}
+
+:not(pre) > code {
+    background-color: rgba($blue, 0.08);
+    color: $primary-color;
+    border: 1px solid rgba($blue, 0.22);
+    border-radius: 5px;
+    padding: 0.1em 0.4em;
+    font-size: 0.875em;
+}
+
+pre {
+    border-radius: 5px;
+    color: #fff;
+    background-color: $primary-color-dark;
+    padding: 5px 5px 5px 18px;
+}
+
+img {
+    margin-bottom: 1rem;
+}
