@@ -27,23 +27,71 @@ pull them up easily myself when I'm cooking.
 ```{r setup, include=FALSE}
 library(yaml)
 library(jsonlite)
+library(openssl)
 recipes <- yaml::read_yaml(here::here("content", "recipes.yml"))
 is_protected <- function(r) isTRUE(r$protected)
 any_protected <- any(vapply(recipes, is_protected, logical(1)))
 
-# Only the SHA-256 hash of the unlock password is embedded in the page --
-# never the plaintext -- and it's checked client-side with the browser's
-# own Web Crypto API. This is a casual deterrent, not real security: the
-# protected recipes' data still ships as a plain JSON file in docs/ (see
-# below) that anyone who finds the URL could fetch directly. That's an
-# accepted tradeoff for a static GitHub Pages site with no backend.
+# PBKDF2-HMAC-SHA256 (RFC 8018), implemented by hand since neither
+# base R nor the openssl/digest packages expose it directly. Verified
+# byte-for-byte against Python's hashlib.pbkdf2_hmac for both a single
+# iteration and 4096 iterations before relying on it here. Needs to be
+# bit-for-bit compatible with the browser's native
+# crypto.subtle.deriveKey({name: "PBKDF2", ...}) -- see unlock_cells
+# below, which derives the same key client-side from the same
+# salt/iterations to decrypt what this function encrypts.
+pbkdf2_hmac_sha256 <- function(password, salt, iterations, dklen = 32) {
+  hlen <- 32
+  n_blocks <- ceiling(dklen / hlen)
+  out <- raw(0)
+  for (i in seq_len(n_blocks)) {
+    int_be <- as.raw(c((i %/% 16777216) %% 256, (i %/% 65536) %% 256, (i %/% 256) %% 256, i %% 256))
+    u <- digest::hmac(key = password, object = c(salt, int_be), algo = "sha256", serialize = FALSE, raw = TRUE)
+    t <- u
+    if (iterations > 1) {
+      for (j in 2:iterations) {
+        u <- digest::hmac(key = password, object = u, algo = "sha256", serialize = FALSE, raw = TRUE)
+        t <- as.raw(bitwXor(as.integer(t), as.integer(u)))
+      }
+    }
+    out <- c(out, t)
+  }
+  out[seq_len(dklen)]
+}
+
+RECIPE_PBKDF2_ITERATIONS <- 250000
+
+# The protected recipes are genuinely encrypted here, not just hidden
+# behind a password *check* -- content/recipes.yml (source) and
+# docs/protected_recipes.json (the file the unlock button fetches) both
+# contain real recipe data, so encrypting the latter is what actually
+# keeps it unreadable to anyone browsing the repo or the deployed site
+# without the password (content/recipes.yml itself is still plaintext,
+# see below). AES-256-CBC, key derived via PBKDF2-HMAC-SHA256 with a
+# random salt and 250,000 iterations -- the same derivation the browser
+# repeats client-side from the same salt to get the same key (see
+# unlock_cells). CBC has no built-in authentication, so a wrong
+# password just decrypts to garbage bytes rather than throwing outright;
+# that's caught client-side because the garbage then fails to parse as
+# JSON.
 #
-# This is the *hash* only -- the plaintext password is never written to
-# this file (or anywhere else in the repo). To change the password,
-# compute a new hash with:
-#   Rscript -e 'digest::digest("new password here", algo="sha256", serialize=FALSE)'
-# and paste the result below.
-RECIPE_LOCK_HASH <- "acf193e8bedf873524444fd11578e7e90c9874845628da26d66c76ceb2b108cb"
+# The plaintext password itself is never written to this file, or
+# anywhere else in the repo -- it's read locally at render time from
+# .recipe_secret (gitignored). To change the password, edit that file
+# and re-render.
+encrypt_protected_data <- function(data, password) {
+  salt <- openssl::rand_bytes(16)
+  iv <- openssl::rand_bytes(16)
+  key <- pbkdf2_hmac_sha256(charToRaw(password), salt, RECIPE_PBKDF2_ITERATIONS)
+  plaintext <- charToRaw(jsonlite::toJSON(data, auto_unbox = TRUE))
+  ciphertext <- openssl::aes_cbc_encrypt(plaintext, key = key, iv = iv)
+  list(
+    salt = openssl::base64_encode(salt),
+    iv = openssl::base64_encode(iv),
+    iterations = RECIPE_PBKDF2_ITERATIONS,
+    ciphertext = openssl::base64_encode(ciphertext)
+  )
+}
 
 source_line <- function(r) {
   if (is.null(r$source_url)) return("")
@@ -135,56 +183,123 @@ render_locked_recipe <- function(r) {
   )
 }
 
-# Data for protected recipes only, written as a separate static file
-# rather than embedded in this page's HTML -- fetched client-side only
-# after the password check passes, so a plain view-source of recipes.html
-# won't reveal it.
+# Encrypted data for protected recipes only, written as a separate
+# static file rather than embedded in this page's HTML. It's fetched
+# and decrypted client-side only after a correct password is entered.
+#
+# 250,000 PBKDF2 iterations in pure R (no compiled implementation is
+# readily available -- checked openssl, digest and sodium; none expose
+# one) takes ~30 seconds. Paying that on *every* render, including ones
+# that only touch a public recipe or an unrelated page, would make the
+# whole site slow to iterate on. So this only re-encrypts when
+# content/recipes.yml or .recipe_secret are newer than the last
+# encrypted output -- editing a public recipe, or re-rendering anything
+# else, reuses the existing docs/protected_recipes.json untouched.
 protected_recipes_list <- Filter(is_protected, recipes)
-protected_data <- protected_recipes_list |>
-  lapply(function(r) list(base_servings = r$base_servings, instructions = r$instructions, ingredients = r$ingredients)) |>
-  setNames(vapply(protected_recipes_list, function(r) r$slug, character(1)))
-jsonlite::write_json(protected_data, here::here("docs", "protected_recipes.json"), auto_unbox = TRUE)
+if (length(protected_recipes_list) > 0) {
+  secret_path <- here::here(".recipe_secret")
+  if (!file.exists(secret_path)) {
+    stop(
+      "content/recipes.yml has protected recipes but .recipe_secret is missing.\n",
+      "Create it at the project root with the unlock password on a single line ",
+      "(gitignored, never committed) and re-render."
+    )
+  }
+  out_path <- here::here("docs", "protected_recipes.json")
+  recipes_yml_path <- here::here("content", "recipes.yml")
+  needs_reencrypt <- !file.exists(out_path) ||
+    file.info(recipes_yml_path)$mtime > file.info(out_path)$mtime ||
+    file.info(secret_path)$mtime > file.info(out_path)$mtime
 
-# `recipe_unlocked` deliberately reads sessionStorage rather than being
-# reactively derived from the password field. Quarto's OJS runtime turns
-# out to have a scale-related bug: when a cell that's an upstream
-# dependency of many other cells (here, ~20 across 5 protected recipes)
-# changes value interactively (i.e. after the page has already loaded),
-# most of those downstream cells silently never re-render even though
-# their values genuinely recomputed (confirmed by inspecting the
-# runtime's own promise state directly) -- only the first one or two do.
-# The *initial* page load doesn't hit this bug -- all cells render fine
-# on first evaluation, regardless of count. So instead of a live/typed
-# password reactively unlocking things, a button verifies the password
-# and, if correct, stores that in sessionStorage and reloads the page --
-# every cell then re-evaluates fresh from a clean load, with
-# `recipe_unlocked` already true from the very first tick, matching the
-# same code path that's already proven reliable.
+  if (needs_reencrypt) {
+    recipe_password <- trimws(readLines(secret_path, warn = FALSE)[1])
+    protected_data <- protected_recipes_list |>
+      lapply(function(r) list(base_servings = r$base_servings, instructions = r$instructions, ingredients = r$ingredients)) |>
+      setNames(vapply(protected_recipes_list, function(r) r$slug, character(1)))
+    encrypted <- encrypt_protected_data(protected_data, recipe_password)
+    jsonlite::write_json(encrypted, out_path, auto_unbox = TRUE)
+  }
+}
+
+# `recipe_unlocked` and `protected_recipe_data` deliberately read
+# sessionStorage rather than being reactively derived live from the
+# password field. Quarto's OJS runtime turns out to have a scale-related
+# bug: when a cell that's an upstream dependency of many other cells
+# (here, ~20 across 5 protected recipes) changes value interactively
+# (i.e. after the page has already loaded), most of those downstream
+# cells silently never re-render even though their values genuinely
+# recomputed (confirmed by inspecting the runtime's own promise state
+# directly) -- only the first one or two do. The *initial* page load
+# doesn't hit this bug -- all cells render fine on first evaluation,
+# regardless of count. So instead of a live/typed password reactively
+# unlocking things, a button does the actual decryption (see below) and,
+# if it succeeds, caches the *decrypted* data in sessionStorage and
+# reloads the page -- every cell then re-evaluates fresh from a clean
+# load, with `recipe_unlocked`/`protected_recipe_data` already populated
+# from the very first tick (a synchronous sessionStorage read, no fetch
+# or decrypt needed post-reload), matching the same code path that's
+# already proven reliable.
+#
+# The password input and unlock button are built in a single cell
+# (rather than a separate `viewof recipe_password_input` cell that the
+# button cell references) so the click handler can close over the input
+# element directly, as a plain local JS variable, and read its *live*
+# `.value` at click time. Referencing another cell's value from inside
+# a nested async closure looked like it should work the same way -- OJS
+# is supposed to resolve cross-cell references dynamically -- but it
+# consistently read back the value from when the button cell first
+# rendered rather than what was currently typed, so every click failed
+# with "incorrect password" even when the password was right. Keeping
+# everything in one cell with a real DOM reference sidesteps that
+# entirely.
 unlock_cells <- paste0(
   "```{ojs}\n//| echo: false\n",
-  'viewof recipe_password_input = html`<input type="password" placeholder="Password for protected recipes">`\n',
-  "```\n\n",
-  "```{ojs}\n//| echo: false\n",
-  "viewof recipe_unlock_button = {\n",
+  "viewof recipe_unlock_form = {\n",
+  "  const input = html`<input type=\"password\" placeholder=\"Password for protected recipes\">`;\n",
   "  const btn = html`<button>Unlock</button>`;\n",
   "  const err = html`<span style=\"color:#b00020; margin-left:0.5em;\"></span>`;\n",
-  "  btn.onclick = async () => {\n",
-  "    const buf = await crypto.subtle.digest(\"SHA-256\", new TextEncoder().encode(recipe_password_input));\n",
-  "    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, \"0\")).join(\"\");\n",
-  "    if (hex === \"", RECIPE_LOCK_HASH, "\") {\n",
+  "  const b64ToBytes = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0));\n",
+  "  const tryUnlock = async () => {\n",
+  "    err.textContent = \"\";\n",
+  "    try {\n",
+  "      const enc = await fetch(\"protected_recipes.json\").then(r => r.json());\n",
+  "      const passKey = await crypto.subtle.importKey(\n",
+  "        \"raw\", new TextEncoder().encode(input.value), \"PBKDF2\", false, [\"deriveKey\"]\n",
+  "      );\n",
+  "      const key = await crypto.subtle.deriveKey(\n",
+  "        {name: \"PBKDF2\", salt: b64ToBytes(enc.salt), iterations: enc.iterations, hash: \"SHA-256\"},\n",
+  "        passKey, {name: \"AES-CBC\", length: 256}, false, [\"decrypt\"]\n",
+  "      );\n",
+  "      const plainBuf = await crypto.subtle.decrypt(\n",
+  "        {name: \"AES-CBC\", iv: b64ToBytes(enc.iv)}, key, b64ToBytes(enc.ciphertext)\n",
+  "      );\n",
+  # AES-CBC has no built-in authentication, so a wrong password doesn't
+  # reliably throw here -- it can decrypt to plausible-looking garbage.
+  # JSON.parse()-ing that garbage is what actually catches a wrong
+  # password in practice.
+  "      const data = JSON.parse(new TextDecoder().decode(plainBuf));\n",
   "      sessionStorage.setItem(\"recipesUnlocked\", \"1\");\n",
+  "      sessionStorage.setItem(\"recipesData\", JSON.stringify(data));\n",
   "      location.reload();\n",
-  "    } else {\n",
+  "    } catch (e) {\n",
   "      err.textContent = \"Incorrect password.\";\n",
   "    }\n",
   "  };\n",
-  "  return html`<span>${btn}${err}</span>`;\n",
+  "  btn.onclick = tryUnlock;\n",
+  "  input.addEventListener(\"keydown\", e => { if (e.key === \"Enter\") tryUnlock(); });\n",
+  "  return html`<span>${input} ${btn}${err}</span>`;\n",
   "}\n```\n\n",
   "```{ojs}\n//| echo: false\n",
   'recipe_unlocked = sessionStorage.getItem("recipesUnlocked") === "1"\n',
   "```\n\n",
   "```{ojs}\n//| echo: false\n",
-  'protected_recipe_data = recipe_unlocked ? await fetch("protected_recipes.json").then(r => r.json()) : null\n',
+  # A plain synchronous sessionStorage read. The fan-out bug described
+  # above is specifically about a cell's value changing *live* after
+  # the page has already loaded; reading sessionStorage here happens
+  # during the same initial-evaluation pass as every other cell on the
+  # page (which is unaffected), not as a later reactive update, so it
+  # doesn't hit that case.
+  'protected_recipe_data = recipe_unlocked ? JSON.parse(sessionStorage.getItem("recipesData")) : null\n',
   "```\n\n"
 )
 ```

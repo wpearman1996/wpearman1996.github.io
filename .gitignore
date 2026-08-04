@@ -1,5 +1,9 @@
 /.quarto/
 
+# Plaintext password for encrypting content/recipes.yml's protected
+# recipes at render time -- never committed. See recipes.qmd.
+/.recipe_secret
+
 # LaTeX/knitr build byproducts
 *.knit.md
 
