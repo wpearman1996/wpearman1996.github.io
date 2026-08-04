@@ -1,17 +1,58 @@
 ---
 title: "Recipes"
 description: "Recipes I make, with a servings calculator for each."
+include-in-header:
+  text: |
+    <script>
+    // Quarto's OJS runtime auto-generates a shinyInput() call for every
+    // "viewof" cell as a bridge for Shiny-interactive documents. This page
+    // has no Shiny backend, so without a stub that call throws a
+    // ReferenceError deep inside the OJS module's evaluation, which was
+    // silently blocking every single cell on the page (not just the
+    // password-gated ones) from ever finishing "waiting for module
+    // import". A no-op stub here, defined before the OJS runtime script
+    // runs, fixes it.
+    window.shinyInput = window.shinyInput || function () {};
+    </script>
 ---
 
 Drag the slider on any recipe to scale the ingredient amounts up or down.
+
+Recipes from other people's own kitchens or family archives are shown in
+full. Recipes from commercial publications aren't reproduced here out of
+respect for the original publishers -- a link to the source is always
+given instead. Those ones are password protected purely so I can still
+pull them up easily myself when I'm cooking.
 
 ```{r setup, include=FALSE}
 library(yaml)
 library(jsonlite)
 recipes <- yaml::read_yaml(here::here("content", "recipes.yml"))
+is_protected <- function(r) isTRUE(r$protected)
+any_protected <- any(vapply(recipes, is_protected, logical(1)))
 
-# Generates one recipe's heading + OJS servings calculator as raw
-# markdown/OJS source text, for cat()-ing in a results='asis' chunk --
+# Only the SHA-256 hash of the unlock password is embedded in the page --
+# never the plaintext -- and it's checked client-side with the browser's
+# own Web Crypto API. This is a casual deterrent, not real security: the
+# protected recipes' data still ships as a plain JSON file in docs/ (see
+# below) that anyone who finds the URL could fetch directly. That's an
+# accepted tradeoff for a static GitHub Pages site with no backend.
+#
+# This is the *hash* only -- the plaintext password is never written to
+# this file (or anywhere else in the repo). To change the password,
+# compute a new hash with:
+#   Rscript -e 'digest::digest("new password here", algo="sha256", serialize=FALSE)'
+# and paste the result below.
+RECIPE_LOCK_HASH <- "acf193e8bedf873524444fd11578e7e90c9874845628da26d66c76ceb2b108cb"
+
+source_line <- function(r) {
+  if (is.null(r$source_url)) return("")
+  label <- if (!is.null(r$source_name)) paste0("Recipe from [", r$source_name, "](", r$source_url, ")") else paste0("Recipe source: <", r$source_url, ">")
+  paste0("*", label, "*\n\n")
+}
+
+# Public recipe: heading + OJS servings calculator, generated as raw
+# markdown/OJS source text for cat()-ing in a results='asis' chunk --
 # content/recipes.yml is the single source of truth for recipe content,
 # this just re-derives the same block structure the old hand-written
 # per-recipe OJS code used, with a unique variable prefix (slug) per
@@ -21,12 +62,9 @@ render_recipe <- function(r) {
   # slider must comfortably span the base serving count -- a fixed [1, 12]
   # range breaks any recipe whose base is above 12 (e.g. a 28-cookie batch)
   slider_max <- max(12, ceiling(r$base_servings * 2))
-  source_line <- if (!is.null(r$source_url)) {
-    paste0("*Recipe", if (!is.null(r$source_name)) paste0(" from [", r$source_name, "](", r$source_url, ")") else paste0(" source: <", r$source_url, ">"), "*\n\n")
-  } else ""
   paste0(
     "\n\n## ", r$name, "\n\n",
-    source_line,
+    source_line(r),
     "Base recipe serves **", r$base_servings, "**.\n\n",
     "```{ojs}\n//| echo: false\n",
     "viewof ", r$slug, "_servings = Inputs.range(\n",
@@ -52,10 +90,108 @@ render_recipe <- function(r) {
     r$instructions, "\n\n<br>\n\n"
   )
 }
+
+# Protected recipe: heading + always-visible source link, then a
+# servings slider + ingredient table + instructions using the exact same
+# Inputs.range()/Inputs.table() primitives as render_recipe() -- kept
+# inert (label "Locked", empty table) until `recipe_unlocked` (defined
+# once below) goes true, at which point it reads from
+# docs/protected_recipes.json (fetched client-side, see unlock_cells).
+#
+# An earlier version built the unlocked UI by hand with html`...` and
+# manual DOM/event-listener wiring in one big cell. That worked fine for
+# a single protected recipe in isolation, but with multiple protected
+# recipes on the same page (all depending on the same shared
+# protected_recipe_data cell), only the first one's DOM update actually
+# landed -- the rest stayed stuck displaying stale content even though
+# their values had genuinely recomputed. Rebuilding it from the same
+# small, proven Inputs.range()/Inputs.table() cells the public recipes
+# already use (rather than one big custom cell) avoids that fan-out bug
+# entirely.
+render_locked_recipe <- function(r) {
+  slider_max <- max(12, ceiling(r$base_servings * 2))
+  slug <- r$slug
+  paste0(
+    "\n\n## ", r$name, "\n\n",
+    source_line(r),
+    "```{ojs}\n//| echo: false\n",
+    "viewof ", slug, "_servings = Inputs.range(\n",
+    "  [1, ", slider_max, "], {value: ", r$base_servings, ", step: 1, label: recipe_unlocked ? \"Servings\" : \"🔒 Locked\"}\n",
+    ")\n```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    slug, "_scaled = recipe_unlocked && protected_recipe_data\n",
+    "  ? protected_recipe_data[\"", slug, "\"].ingredients.map(i => ({\n",
+    "      Ingredient: i.name,\n",
+    "      Amount: Math.round(i.amount * ", slug, "_servings / protected_recipe_data[\"", slug, "\"].base_servings * 100) / 100,\n",
+    "      Unit: i.unit\n",
+    "    }))\n",
+    "  : []\n```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    "Inputs.table(", slug, "_scaled, {columns: [\"Ingredient\", \"Amount\", \"Unit\"]})\n",
+    "```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    "md`${recipe_unlocked && protected_recipe_data ? protected_recipe_data[\"", slug, "\"].instructions : \"🔒 This recipe is password protected. Enter the password above to view it.\"}`\n",
+    "```\n\n<br>\n\n"
+  )
+}
+
+# Data for protected recipes only, written as a separate static file
+# rather than embedded in this page's HTML -- fetched client-side only
+# after the password check passes, so a plain view-source of recipes.html
+# won't reveal it.
+protected_recipes_list <- Filter(is_protected, recipes)
+protected_data <- protected_recipes_list |>
+  lapply(function(r) list(base_servings = r$base_servings, instructions = r$instructions, ingredients = r$ingredients)) |>
+  setNames(vapply(protected_recipes_list, function(r) r$slug, character(1)))
+jsonlite::write_json(protected_data, here::here("docs", "protected_recipes.json"), auto_unbox = TRUE)
+
+# `recipe_unlocked` deliberately reads sessionStorage rather than being
+# reactively derived from the password field. Quarto's OJS runtime turns
+# out to have a scale-related bug: when a cell that's an upstream
+# dependency of many other cells (here, ~20 across 5 protected recipes)
+# changes value interactively (i.e. after the page has already loaded),
+# most of those downstream cells silently never re-render even though
+# their values genuinely recomputed (confirmed by inspecting the
+# runtime's own promise state directly) -- only the first one or two do.
+# The *initial* page load doesn't hit this bug -- all cells render fine
+# on first evaluation, regardless of count. So instead of a live/typed
+# password reactively unlocking things, a button verifies the password
+# and, if correct, stores that in sessionStorage and reloads the page --
+# every cell then re-evaluates fresh from a clean load, with
+# `recipe_unlocked` already true from the very first tick, matching the
+# same code path that's already proven reliable.
+unlock_cells <- paste0(
+  "```{ojs}\n//| echo: false\n",
+  'viewof recipe_password_input = html`<input type="password" placeholder="Password for protected recipes">`\n',
+  "```\n\n",
+  "```{ojs}\n//| echo: false\n",
+  "viewof recipe_unlock_button = {\n",
+  "  const btn = html`<button>Unlock</button>`;\n",
+  "  const err = html`<span style=\"color:#b00020; margin-left:0.5em;\"></span>`;\n",
+  "  btn.onclick = async () => {\n",
+  "    const buf = await crypto.subtle.digest(\"SHA-256\", new TextEncoder().encode(recipe_password_input));\n",
+  "    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, \"0\")).join(\"\");\n",
+  "    if (hex === \"", RECIPE_LOCK_HASH, "\") {\n",
+  "      sessionStorage.setItem(\"recipesUnlocked\", \"1\");\n",
+  "      location.reload();\n",
+  "    } else {\n",
+  "      err.textContent = \"Incorrect password.\";\n",
+  "    }\n",
+  "  };\n",
+  "  return html`<span>${btn}${err}</span>`;\n",
+  "}\n```\n\n",
+  "```{ojs}\n//| echo: false\n",
+  'recipe_unlocked = sessionStorage.getItem("recipesUnlocked") === "1"\n',
+  "```\n\n",
+  "```{ojs}\n//| echo: false\n",
+  'protected_recipe_data = recipe_unlocked ? await fetch("protected_recipes.json").then(r => r.json()) : null\n',
+  "```\n\n"
+)
 ```
 
 ```{r}
 #| results: asis
 #| echo: false
-cat(paste(vapply(recipes, render_recipe, character(1)), collapse = "\n"))
+if (any_protected) cat(unlock_cells)
+cat(paste(vapply(recipes, function(r) if (is_protected(r)) render_locked_recipe(r) else render_recipe(r), character(1)), collapse = "\n"))
 ```

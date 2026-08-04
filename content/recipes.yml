@@ -1,29 +1,3 @@
-- name: Pancakes
-  slug: pancakes
-  base_servings: 4
-  instructions: 'Mix dry ingredients, whisk in milk and eggs, then cook spoonfuls
-    on a hot greased pan until bubbles form, flip, and cook the other side.
-
-    '
-  ingredients:
-  - name: Flour
-    amount: 200
-    unit: g
-  - name: Milk
-    amount: 300
-    unit: ml
-  - name: Eggs
-    amount: 2
-    unit: ''
-  - name: Sugar
-    amount: 30
-    unit: g
-  - name: Baking powder
-    amount: 2
-    unit: tsp
-  - name: Salt
-    amount: 1
-    unit: pinch
 - name: Nana's Devil Food Cake
   slug: nanas_devil_food_cake
   base_servings: 12
@@ -74,21 +48,26 @@
 - name: Good Oil's Date Slice
   slug: good_oils_date_slice
   base_servings: 20
+  protected: true
   source_name: Otago Daily Times
   source_url: https://www.odt.co.nz/life-and-style/food-and-wine/good-oils-date-slice-d2fvms9u
 - name: Aurora Cafe's ANZAC Caramel Slice
   slug: aurora_cafe_anzac_caramel_slice
   base_servings: 20
+  protected: true
   source_name: Otago Daily Times — Aurora Cafe (Jillian Peacock)
   source_url: https://www.odt.co.nz/life-and-style/food-and-wine/ask-a-chef-aurora-cafes-anzac-caramel-slice-oqf2g6n3
 - name: The Food Lab's Chocolate Chip Cookies
   slug: food_lab_chocolate_chip_cookies
   base_servings: 28
+  protected: true
   source_name: Serious Eats (J. Kenji López-Alt)
   source_url: https://www.seriouseats.com/the-food-lab-best-chocolate-chip-cookie-recipe
 - name: Gooey Fudgy Brownies
   slug: gooey_fudgy_brownies
   base_servings: 16
+  source_name: r/Baking
+  source_url: https://www.reddit.com/r/Baking/comments/1714o53/yesterday_i_asked_for_gooey_brownie_recipes_today/
   instructions: 'Preheat the oven to 175°C (350°F) and line a 9x13" pan. Put the cocoa
     powder, chopped chocolate and espresso powder in a heatproof bowl. Brown the butter
     in a saucepan over medium-low heat, stirring often, until the milk solids turn
@@ -135,11 +114,13 @@
 - name: Ima's Hot Cross Buns
   slug: imas_hot_cross_buns
   base_servings: 12
+  protected: true
   source_name: The Spinoff
   source_url: https://thespinoff.co.nz/kai/11-04-2019/recipe-imas-hot-cross-buns
 - name: Ligurian Focaccia
   slug: ligurian_focaccia
   base_servings: 1
+  protected: true
   source_name: Salt Fat Acid Heat (Samin Nosrat)
   source_url: https://www.saltfatacidheat.com/fat/ligurian-focaccia
 - name: Grandmum's Carrot Cake
