@@ -219,55 +219,6 @@
   - name: Toasted coconut
     amount: 0.25
     unit: cup
-- name: Bagels
-  slug: bagels
-  base_servings: 11
-  source_name: Adapted from thia.codes
-  source_url: https://thia.codes/newbagels.html
-  instructions: 'Whisk the flour and vital wheat gluten together, then stir in the
-    diastatic malt powder, instant yeast, salt and brown sugar. Add the water and
-    oil and knead for about 10 minutes -- it''s ready when it ribbons around the hook,
-    stretches easily and feels hydrated (skip the windowpane test; this dough is too
-    low-hydration and will rip). Cover and rest 20 minutes to 1 hour until smoothed
-    out. Divide into ~140g pieces, roll each into a snake, wrap around your hand and
-    roll firmly against the counter to seal. Rest at room temperature, covered, until
-    a bagel floats when dropped in water (about an hour), then refrigerate 16-24 hours
-    (they''ll keep up to ~3 days). The next day, heat the oven as hot as possible,
-    soak your bagel boards, and bring a pot of water to a gentle boil with the barley
-    malt syrup stirred in. Boil the bagels 10-15 seconds per side, then arrange face-down
-    on the soaked boards and bake for 5 minutes directly on a pizza stone. Flip the
-    boards so the bagels are face-up and bake a further 5-10 minutes to desired doneness.
-    Rest on a cooling rack at least 15 minutes before eating.
-
-    '
-  ingredients:
-  - name: Bread flour, ~10% protein
-    amount: 953
-    unit: g
-  - name: Vital wheat gluten
-    amount: 47
-    unit: g
-  - name: Diastatic malt powder
-    amount: 2.5
-    unit: g
-  - name: Water
-    amount: 500
-    unit: g
-  - name: Instant yeast
-    amount: 5
-    unit: g
-  - name: Salt
-    amount: 25
-    unit: g
-  - name: Neutral oil, e.g. grapeseed or sunflower
-    amount: 30
-    unit: g
-  - name: Dark brown sugar
-    amount: 50
-    unit: g
-  - name: Barley malt syrup, for boiling water
-    amount: 1
-    unit: Tbsp
 - name: Cushman's Bakery Scotch Cookies
   slug: cushmans_scotch_cookies
   base_servings: 36
@@ -310,3 +261,52 @@
   - name: Milk
     amount: 0.25
     unit: cup
+- name: Bagels
+  slug: bagels
+  base_servings: 11
+  instructions: 'Whisk the flour and vital wheat gluten together, then stir in the
+    diastatic malt powder, instant yeast, salt and brown sugar. Add the water and
+    oil and knead by hand for about 10 minutes. Cover and rest 20 minutes, then knead
+    again for 10 minutes - then allow to rise till ~1.5-2x in size. Divide into ~120g
+    pieces, roll each into a snake, wrap around your hand and roll firmly against
+    the counter to seal. Rest at room temperature, covered, until a bagel floats when
+    dropped in water (about an hour), then refrigerate 16-24 hours (they''ll keep
+    up to ~3 days). The next day, heat the oven as hot as possible, boil a jug of
+    water and also bring a pot of water to a gentle boil with the malt syrup stirred
+    in.
+
+
+    Place a tray with a tea towel on it in the base of your oven and cover in boiling
+    water - then place in oven. Then boil the bagels 10-15 seconds per side, then
+    arrange face-down on an oven tray with baking paper or a silpat, and then bake
+    for ~20 minutes. '
+  ingredients:
+  - name: Bread flour, ~10% protein
+    amount: 953
+    unit: g
+  - name: Vital wheat gluten
+    amount: 47
+    unit: g
+  - name: Diastatic malt powder
+    amount: 2.5
+    unit: g
+  - name: Water
+    amount: 500
+    unit: g
+  - name: Instant yeast
+    amount: 5
+    unit: g
+  - name: Salt
+    amount: 25
+    unit: g
+  - name: Neutral oil, e.g. grapeseed or sunflower
+    amount: 30
+    unit: g
+  - name: Dark brown sugar
+    amount: 50
+    unit: g
+  - name: Barley malt syrup, for boiling water
+    amount: 1
+    unit: Tbsp
+  source_name: Adapted from thia.codes
+  source_url: https://thia.codes/newbagels.html
