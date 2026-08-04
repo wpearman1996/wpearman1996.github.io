@@ -161,6 +161,8 @@ ui <- fluidPage(
           textInput("recipe_name", "Name"),
           textInput("recipe_slug", "Slug (unique, no spaces -- auto-filled from name)"),
           numericInput("recipe_servings", "Base servings", value = 4, min = 1),
+          textInput("recipe_source_name", "Source name (optional, e.g. \"Otago Daily Times\")"),
+          textInput("recipe_source_url", "Source URL (optional)"),
           textAreaInput("recipe_instructions", "Instructions", rows = 4),
           h4("Ingredients"),
           uiOutput("ingredient_rows"),
@@ -487,6 +489,8 @@ server <- function(input, output, session) {
     updateTextInput(session, "recipe_name", value = "")
     updateTextInput(session, "recipe_slug", value = "")
     updateNumericInput(session, "recipe_servings", value = 4)
+    updateTextInput(session, "recipe_source_name", value = "")
+    updateTextInput(session, "recipe_source_url", value = "")
     updateTextAreaInput(session, "recipe_instructions", value = "")
     set_ingredient_rows(list())
   }
@@ -514,6 +518,8 @@ server <- function(input, output, session) {
     updateTextInput(session, "recipe_name", value = r$name)
     updateTextInput(session, "recipe_slug", value = r$slug)
     updateNumericInput(session, "recipe_servings", value = r$base_servings)
+    updateTextInput(session, "recipe_source_name", value = r$source_name %||% "")
+    updateTextInput(session, "recipe_source_url", value = r$source_url %||% "")
     updateTextAreaInput(session, "recipe_instructions", value = trimws(r$instructions))
     set_ingredient_rows(r$ingredients)
   })
@@ -548,6 +554,8 @@ server <- function(input, output, session) {
       base_servings = input$recipe_servings, instructions = input$recipe_instructions,
       ingredients = ings
     )
+    if (nzchar(trimws(input$recipe_source_name))) new_recipe$source_name <- input$recipe_source_name
+    if (nzchar(trimws(input$recipe_source_url))) new_recipe$source_url <- input$recipe_source_url
     all_recipes <- recipes_data()
     other_slugs <- vapply(all_recipes, function(r) r$slug, character(1))
     if (is.null(editing_slug())) {

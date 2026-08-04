@@ -1,8 +1,10 @@
 - name: Pancakes
   slug: pancakes
   base_servings: 4
-  instructions: Mix dry ingredients, whisk in milk and eggs, then cook spoonfuls on
-    a hot greased pan until bubbles form, flip, and cook the other side.
+  instructions: 'Mix dry ingredients, whisk in milk and eggs, then cook spoonfuls
+    on a hot greased pan until bubbles form, flip, and cook the other side.
+
+    '
   ingredients:
   - name: Flour
     amount: 200
@@ -22,3 +24,308 @@
   - name: Salt
     amount: 1
     unit: pinch
+- name: Nana's Devil Food Cake
+  slug: nanas_devil_food_cake
+  base_servings: 12
+  source_name: Family recipe, via r/Old_Recipes
+  source_url: https://www.reddit.com/r/Old_Recipes/comments/jd3hf3/known_only_as_nanas_devils_food_best_chocolate/
+  instructions: 'Sift the flour, salt, baking powder, baking soda and cocoa together.
+    In a separate bowl whisk the sugar, oil, milk, cooled coffee, eggs and vanilla
+    until smooth. Slowly fold the dry ingredients into the wet ingredients until just
+    combined. Pour into a greased and floured pan and bake at around 190°C (375°F)
+    until a skewer comes out clean -- baking time varies quite a bit depending on
+    the pan, so start checking early.
+
+    '
+  ingredients:
+  - name: Flour
+    amount: 2
+    unit: cups
+  - name: Salt
+    amount: 1
+    unit: tsp
+  - name: Baking powder
+    amount: 1
+    unit: tsp
+  - name: Baking soda
+    amount: 2
+    unit: tsp
+  - name: Cocoa
+    amount: 0.75
+    unit: cup
+  - name: Sugar
+    amount: 2
+    unit: cups
+  - name: Oil
+    amount: 1
+    unit: cup
+  - name: Milk
+    amount: 1
+    unit: cup
+  - name: Coffee, cooled but not cold
+    amount: 1
+    unit: cup
+  - name: Eggs
+    amount: 2
+    unit: ''
+  - name: Vanilla
+    amount: 1
+    unit: tsp
+- name: Good Oil's Date Slice
+  slug: good_oils_date_slice
+  base_servings: 20
+  source_name: Otago Daily Times
+  source_url: https://www.odt.co.nz/life-and-style/food-and-wine/good-oils-date-slice-d2fvms9u
+- name: Aurora Cafe's ANZAC Caramel Slice
+  slug: aurora_cafe_anzac_caramel_slice
+  base_servings: 20
+  source_name: Otago Daily Times — Aurora Cafe (Jillian Peacock)
+  source_url: https://www.odt.co.nz/life-and-style/food-and-wine/ask-a-chef-aurora-cafes-anzac-caramel-slice-oqf2g6n3
+- name: The Food Lab's Chocolate Chip Cookies
+  slug: food_lab_chocolate_chip_cookies
+  base_servings: 28
+  source_name: Serious Eats (J. Kenji López-Alt)
+  source_url: https://www.seriouseats.com/the-food-lab-best-chocolate-chip-cookie-recipe
+- name: Gooey Fudgy Brownies
+  slug: gooey_fudgy_brownies
+  base_servings: 16
+  instructions: 'Preheat the oven to 175°C (350°F) and line a 9x13" pan. Put the cocoa
+    powder, chopped chocolate and espresso powder in a heatproof bowl. Brown the butter
+    in a saucepan over medium-low heat, stirring often, until the milk solids turn
+    brown and smell nutty, then immediately pour it over the cocoa mixture and stir
+    until smooth; set aside to cool. Whip the sugars, vanilla and eggs until thick
+    and pale (4-10 minutes), then slowly pour in the cooled chocolate-butter mixture.
+    Fold in the flour and salt until just combined -- the batter will be thick. Spread
+    into the pan and bake for about 25 minutes until the top is glossy and just set.
+    Do not overbake -- they finish cooking as they cool. Let cool at least 30 minutes
+    before slicing.
+
+    '
+  ingredients:
+  - name: Butter, to be browned
+    amount: 227
+    unit: g
+  - name: Dutch-process cocoa powder
+    amount: 90
+    unit: g
+  - name: Dark or semisweet chocolate, finely chopped
+    amount: 113
+    unit: g
+  - name: Instant espresso powder
+    amount: 1
+    unit: tsp
+  - name: White sugar
+    amount: 300
+    unit: g
+  - name: Brown sugar
+    amount: 100
+    unit: g
+  - name: Vanilla
+    amount: 1
+    unit: Tbsp
+  - name: Eggs
+    amount: 4
+    unit: ''
+  - name: Flour
+    amount: 120
+    unit: g
+  - name: Coarse kosher salt
+    amount: 1
+    unit: tsp
+- name: Ima's Hot Cross Buns
+  slug: imas_hot_cross_buns
+  base_servings: 12
+  source_name: The Spinoff
+  source_url: https://thespinoff.co.nz/kai/11-04-2019/recipe-imas-hot-cross-buns
+- name: Ligurian Focaccia
+  slug: ligurian_focaccia
+  base_servings: 1
+  source_name: Salt Fat Acid Heat (Samin Nosrat)
+  source_url: https://www.saltfatacidheat.com/fat/ligurian-focaccia
+- name: Grandmum's Carrot Cake
+  slug: grandmums_carrot_cake
+  base_servings: 10
+  instructions: 'Preheat the oven to 180°C. Combine the eggs and oil in one bowl,
+    and the dry ingredients in another. Mix the egg mixture, carrots and nuts into
+    the dry ingredients until just combined. Bake until the cake springs back or a
+    skewer comes out clean. Grandmum normally doubled this recipe to make one full-size
+    cake.
+
+    '
+  ingredients:
+  - name: Grated carrot
+    amount: 3
+    unit: cups
+  - name: Chopped walnuts
+    amount: 1
+    unit: cup
+  - name: Caster sugar
+    amount: 1.5
+    unit: cups
+  - name: Flour
+    amount: 2
+    unit: cups
+  - name: Canola oil
+    amount: 1.5
+    unit: cups
+  - name: Eggs
+    amount: 4
+    unit: ''
+  - name: Baking soda
+    amount: 2
+    unit: tsp
+  - name: Vanilla essence
+    amount: 1
+    unit: tsp
+  - name: Cinnamon
+    amount: 1
+    unit: tsp
+  - name: Salt
+    amount: 1
+    unit: tsp
+- name: Pandan Sponge Cake
+  slug: pandan_sponge_cake
+  base_servings: 8
+  source_name: Adapted from Food Talk Daily
+  source_url: https://www.foodtalkdaily.com/recipes/cakes/sponge-cake/orh-nee-cake-44493480
+  instructions: 'Preheat the oven to 150°C (fan) and line a 6" cake tin. Whip the
+    egg whites, gradually adding the sugar, until soft peaks form. Whisk in the egg
+    yolks by hand, then sift in the cake flour and salt and fold through. Warm the
+    milk and oil together and fold in, along with the vanilla and pandan paste. Pour
+    into the tin, tap out any air bubbles, and bake for 40 minutes. For the cream:
+    hydrate the gelatin in water and melt it, whip the cream with the sugar, then
+    fold in the gelatin. Top the cooled cake with the cream and sprinkle with toasted
+    coconut.
+
+    '
+  ingredients:
+  - name: Eggs, separated
+    amount: 4
+    unit: ''
+  - name: Granulated sugar
+    amount: 130
+    unit: g
+  - name: Cake flour
+    amount: 130
+    unit: g
+  - name: Salt
+    amount: 1
+    unit: g
+  - name: Vegetable oil
+    amount: 30
+    unit: g
+  - name: Milk
+    amount: 40
+    unit: g
+  - name: Vanilla extract
+    amount: 3
+    unit: g
+  - name: Pandan paste
+    amount: 3
+    unit: tsp
+  - name: Heavy cream
+    amount: 450
+    unit: ml
+  - name: Powdered sugar
+    amount: 40
+    unit: g
+  - name: Gelatin
+    amount: 1
+    unit: tsp
+  - name: Water, for gelatin
+    amount: 2
+    unit: Tbsp
+  - name: Toasted coconut
+    amount: 0.25
+    unit: cup
+- name: Bagels
+  slug: bagels
+  base_servings: 11
+  source_name: Adapted from thia.codes
+  source_url: https://thia.codes/newbagels.html
+  instructions: 'Whisk the flour and vital wheat gluten together, then stir in the
+    diastatic malt powder, instant yeast, salt and brown sugar. Add the water and
+    oil and knead for about 10 minutes -- it''s ready when it ribbons around the hook,
+    stretches easily and feels hydrated (skip the windowpane test; this dough is too
+    low-hydration and will rip). Cover and rest 20 minutes to 1 hour until smoothed
+    out. Divide into ~140g pieces, roll each into a snake, wrap around your hand and
+    roll firmly against the counter to seal. Rest at room temperature, covered, until
+    a bagel floats when dropped in water (about an hour), then refrigerate 16-24 hours
+    (they''ll keep up to ~3 days). The next day, heat the oven as hot as possible,
+    soak your bagel boards, and bring a pot of water to a gentle boil with the barley
+    malt syrup stirred in. Boil the bagels 10-15 seconds per side, then arrange face-down
+    on the soaked boards and bake for 5 minutes directly on a pizza stone. Flip the
+    boards so the bagels are face-up and bake a further 5-10 minutes to desired doneness.
+    Rest on a cooling rack at least 15 minutes before eating.
+
+    '
+  ingredients:
+  - name: Bread flour, ~10% protein
+    amount: 953
+    unit: g
+  - name: Vital wheat gluten
+    amount: 47
+    unit: g
+  - name: Diastatic malt powder
+    amount: 2.5
+    unit: g
+  - name: Water
+    amount: 500
+    unit: g
+  - name: Instant yeast
+    amount: 5
+    unit: g
+  - name: Salt
+    amount: 25
+    unit: g
+  - name: Neutral oil, e.g. grapeseed or sunflower
+    amount: 30
+    unit: g
+  - name: Dark brown sugar
+    amount: 50
+    unit: g
+  - name: Barley malt syrup, for boiling water
+    amount: 1
+    unit: Tbsp
+- name: Cushman's Bakery Scotch Cookies
+  slug: cushmans_scotch_cookies
+  base_servings: 36
+  source_name: Family recipe archive, via r/Old_Recipes
+  source_url: https://www.reddit.com/r/Old_Recipes/comments/cj44x1/was_looking_into_a_murder_that_took_place_in_my/
+  instructions: 'Cream the sugar, shortening, molasses and egg together. Sift the
+    dry ingredients and beat them in, along with the milk. Drop by the tablespoonful
+    onto greased sheets and press down lightly with a floured glass. Bake in a moderate
+    oven until set, but do not overbake.
+
+    '
+  ingredients:
+  - name: Sugar
+    amount: 1.5
+    unit: cups
+  - name: Shortening
+    amount: 1
+    unit: cup
+  - name: Molasses
+    amount: 0.5
+    unit: cup
+  - name: Egg
+    amount: 1
+    unit: ''
+  - name: Flour
+    amount: 3.5
+    unit: cups
+  - name: Salt
+    amount: 1
+    unit: tsp
+  - name: Baking soda
+    amount: 2.5
+    unit: tsp
+  - name: Cinnamon
+    amount: 1
+    unit: tsp
+  - name: Mace
+    amount: 1
+    unit: tsp
+  - name: Milk
+    amount: 0.25
+    unit: cup

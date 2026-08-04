@@ -18,12 +18,19 @@ recipes <- yaml::read_yaml(here::here("content", "recipes.yml"))
 # recipe so they don't clash.
 render_recipe <- function(r) {
   ingredients_json <- jsonlite::toJSON(r$ingredients, auto_unbox = TRUE)
+  # slider must comfortably span the base serving count -- a fixed [1, 12]
+  # range breaks any recipe whose base is above 12 (e.g. a 28-cookie batch)
+  slider_max <- max(12, ceiling(r$base_servings * 2))
+  source_line <- if (!is.null(r$source_url)) {
+    paste0("*Recipe", if (!is.null(r$source_name)) paste0(" from [", r$source_name, "](", r$source_url, ")") else paste0(" source: <", r$source_url, ">"), "*\n\n")
+  } else ""
   paste0(
     "\n\n## ", r$name, "\n\n",
+    source_line,
     "Base recipe serves **", r$base_servings, "**.\n\n",
     "```{ojs}\n//| echo: false\n",
     "viewof ", r$slug, "_servings = Inputs.range(\n",
-    "  [1, 12], {value: ", r$base_servings, ", step: 1, label: \"Servings\"}\n",
+    "  [1, ", slider_max, "], {value: ", r$base_servings, ", step: 1, label: \"Servings\"}\n",
     ")\n```\n\n",
     "```{ojs}\n//| echo: false\n",
     r$slug, "_base = ({\n",
