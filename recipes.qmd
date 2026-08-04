@@ -5,51 +5,50 @@ description: "Recipes I make, with a servings calculator for each."
 
 Drag the slider on any recipe to scale the ingredient amounts up or down.
 
-## Pancakes
+```{r setup, include=FALSE}
+library(yaml)
+library(jsonlite)
+recipes <- yaml::read_yaml(here::here("content", "recipes.yml"))
 
-Base recipe serves **4**.
-
-```{ojs}
-//| echo: false
-viewof pancakes_servings = Inputs.range(
-  [1, 12], {value: 4, step: 1, label: "Servings"}
-)
-```
-
-```{ojs}
-//| echo: false
-pancakes_base = ({
-  servings: 4,
-  ingredients: [
-    { name: "Flour", amount: 200, unit: "g" },
-    { name: "Milk", amount: 300, unit: "ml" },
-    { name: "Eggs", amount: 2, unit: "" },
-    { name: "Sugar", amount: 30, unit: "g" },
-    { name: "Baking powder", amount: 2, unit: "tsp" },
-    { name: "Salt", amount: 1, unit: "pinch" }
-  ]
-})
-```
-
-```{ojs}
-//| echo: false
-pancakes_scaled = {
-  const ratio = pancakes_servings / pancakes_base.servings;
-  return pancakes_base.ingredients.map(i => ({
-    Ingredient: i.name,
-    Amount: Math.round(i.amount * ratio * 100) / 100,
-    Unit: i.unit
-  }));
+# Generates one recipe's heading + OJS servings calculator as raw
+# markdown/OJS source text, for cat()-ing in a results='asis' chunk --
+# content/recipes.yml is the single source of truth for recipe content,
+# this just re-derives the same block structure the old hand-written
+# per-recipe OJS code used, with a unique variable prefix (slug) per
+# recipe so they don't clash.
+render_recipe <- function(r) {
+  ingredients_json <- jsonlite::toJSON(r$ingredients, auto_unbox = TRUE)
+  paste0(
+    "\n\n## ", r$name, "\n\n",
+    "Base recipe serves **", r$base_servings, "**.\n\n",
+    "```{ojs}\n//| echo: false\n",
+    "viewof ", r$slug, "_servings = Inputs.range(\n",
+    "  [1, 12], {value: ", r$base_servings, ", step: 1, label: \"Servings\"}\n",
+    ")\n```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    r$slug, "_base = ({\n",
+    "  servings: ", r$base_servings, ",\n",
+    "  ingredients: ", ingredients_json, "\n",
+    "})\n```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    r$slug, "_scaled = {\n",
+    "  const ratio = ", r$slug, "_servings / ", r$slug, "_base.servings;\n",
+    "  return ", r$slug, "_base.ingredients.map(i => ({\n",
+    "    Ingredient: i.name,\n",
+    "    Amount: Math.round(i.amount * ratio * 100) / 100,\n",
+    "    Unit: i.unit\n",
+    "  }));\n",
+    "}\n```\n\n",
+    "```{ojs}\n//| echo: false\n",
+    "Inputs.table(", r$slug, "_scaled, {columns: [\"Ingredient\", \"Amount\", \"Unit\"]})\n",
+    "```\n\n",
+    r$instructions, "\n\n<br>\n\n"
+  )
 }
 ```
 
-```{ojs}
-//| echo: false
-Inputs.table(pancakes_scaled, {columns: ["Ingredient", "Amount", "Unit"]})
+```{r}
+#| results: asis
+#| echo: false
+cat(paste(vapply(recipes, render_recipe, character(1)), collapse = "\n"))
 ```
-
-Mix dry ingredients, whisk in milk and eggs, then cook spoonfuls on a hot greased pan until bubbles form, flip, and cook the other side.
-
-<br>
-
-<aside>This is a placeholder recipe to demonstrate the format — copy this section's structure (a `viewof ..._servings` slider, a `..._base` ingredient list, a `..._scaled` calculation, and an `Inputs.table(...)` call) for each recipe you add, giving each its own variable-name prefix so they don't clash.</aside>

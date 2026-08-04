@@ -1,0 +1,24 @@
+- name: Pancakes
+  slug: pancakes
+  base_servings: 4
+  instructions: Mix dry ingredients, whisk in milk and eggs, then cook spoonfuls on
+    a hot greased pan until bubbles form, flip, and cook the other side.
+  ingredients:
+  - name: Flour
+    amount: 200
+    unit: g
+  - name: Milk
+    amount: 300
+    unit: ml
+  - name: Eggs
+    amount: 2
+    unit: ''
+  - name: Sugar
+    amount: 30
+    unit: g
+  - name: Baking powder
+    amount: 2
+    unit: tsp
+  - name: Salt
+    amount: 1
+    unit: pinch

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "quarto-preview",
+      "runtimeExecutable": "quarto",
+      "runtimeArgs": ["preview", "--port", "7654", "--no-browser"],
+      "port": 7654
+    }
+  ]
+}
