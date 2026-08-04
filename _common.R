@@ -145,11 +145,18 @@ format_pub_citation <- function(pub) {
 render_cv_publications <- function(view = "full_cv") {
   # Uses "**N.**" instead of markdown "N." list syntax, because pandoc
   # auto-increments real ordered lists and ignores our own numbering.
+  #
+  # Numbers count down from nrow(pubs) based on position in the list
+  # (already sorted newest-first), not pub$index -- for the full list
+  # this reproduces the same numbers as pub$index (1..N with no gaps),
+  # but for a filtered view (e.g. the one-page CV's subset) it stays
+  # continuous instead of skipping the numbers of excluded papers.
   pubs <- load_pubs(view)
-  if (nrow(pubs) == 0) return("")
-  lines <- vapply(seq_len(nrow(pubs)), function(i) {
+  n <- nrow(pubs)
+  if (n == 0) return("")
+  lines <- vapply(seq_len(n), function(i) {
     pub <- pubs[i, ]
-    glue::glue("**{pub$index}.** {format_pub_citation(pub)}")
+    glue::glue("**{n - i + 1}.** {format_pub_citation(pub)}")
   }, character(1))
   paste(lines, collapse = "\n\n")
 }

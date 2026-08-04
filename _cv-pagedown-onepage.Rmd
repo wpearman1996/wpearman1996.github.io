@@ -30,7 +30,7 @@ year_table <- function(d, year_col, text_col) {
 
 ::: {.row}
 
-:::::: {.col-8 .summary}
+:::::: {.col-7 .summary}
 
 # Research summary
 
@@ -38,7 +38,7 @@ I am a broadly trained molecular and microbial ecologist specialising in populat
 
 ::::::
 
-:::::: {.col-4}
+:::::: {.col-5}
 
 # Contact {.box}
 

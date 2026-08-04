@@ -105,13 +105,23 @@ h1.box {
   line-height: 125%;
   border-radius: 2px;
   font-size: 0.9em;
+  width: 100%;
+  box-sizing: border-box;
 }
 .info-box thead {
   display: none;
 }
+.info-box table {
+  width: 100%;
+  table-layout: fixed;
+}
 .info-box col:first-child{
   width: 12%;
   text-align: center;
+}
+.info-box td {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .info-box a {
   text-decoration: none;

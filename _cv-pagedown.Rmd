@@ -28,7 +28,7 @@ year_table <- function(d, year_col, text_col) {
 
 ::: {.row}
 
-:::::: {.col-8 .summary}
+:::::: {.col-7 .summary}
 
 # Research summary
 
@@ -36,7 +36,7 @@ year_table <- function(d, year_col, text_col) {
 
 ::::::
 
-:::::: {.col-4}
+:::::: {.col-5}
 
 # Contact {.box}
 
@@ -108,10 +108,7 @@ cv_entries("grant", view) |>
 
 :::
 
-<!-- you might want to manually insert page breaks -->
-<br class="pageBreak" />
-
-::: {.row .pagetwo}
+::: {.row}
 
 :::::: {.col-6 .left}
 
