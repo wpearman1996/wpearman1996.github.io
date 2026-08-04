@@ -78,7 +78,8 @@ h1.title {
 }
 
 /* section headers */
-.row h1 {
+.row h1,
+.flowing-section h1 {
   color: #1B3A5C;
   border-bottom: 1px solid black;
   margin-top: 0.5em;
@@ -128,21 +129,48 @@ h1.box {
   color: black;
 }
 
-/* style content tables */
-.col-6 thead {
+/* style content tables (fixed 2-col rows, e.g. Education/Teaching, and
+   the flowing multi-column section below) */
+.col-6 thead,
+.flowing-section thead {
   display: none;
 }
 
 /* set the width of the first column in the tables */
-.col-6 td:first-child {
+.col-6 td:first-child,
+.flowing-section td:first-child {
     width: 18%;
 }
 
-.col-6 td {
+.col-6 td,
+.flowing-section td {
   font-size: 0.95em;
   vertical-align: top;
   line-height: 120%;
   padding: 3px 0;
+}
+
+/* Flowing multi-column section (Awards through Professional development):
+   unlike the fixed .col-6 row-pairs above, this lets content pack itself
+   into whatever space is available rather than being tied to a fixed
+   row/column pairing -- a later section (e.g. Service) can flow up into
+   space an earlier one (e.g. Awards) left unused. */
+.flowing-section {
+  column-count: 2;
+  column-gap: 2em;
+  column-fill: auto;
+}
+
+.flowing-section h1 {
+  break-after: avoid-column;
+}
+
+.flowing-section table {
+  break-inside: auto;
+}
+
+.flowing-section tr {
+  break-inside: avoid;
 }
 
 td {

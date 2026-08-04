@@ -82,9 +82,7 @@ cat(render_cv_section("teaching", view))
 
 :::
 
-::: {.row}
-
-:::::: {.col-6 .left}
+::: {.flowing-section}
 
 # Awards and honours
 
@@ -93,10 +91,6 @@ cv_entries("award", view) |>
   year_table("year", "title")
 ```
 
-::::::
-
-:::::: {.col-6 .right}
-
 # Selected major grants
 
 ```{r}
@@ -104,24 +98,12 @@ cv_entries("grant", view) |>
   year_table("year", "title")
 ```
 
-::::::
-
-:::
-
-::: {.row}
-
-:::::: {.col-6 .left}
-
 # Selected talks {.talks}
 
 ```{r}
 cv_entries("talk", view) |>
   year_table("year", "title")
 ```
-
-::::::
-
-:::::: {.col-6 .right}
 
 # Selected service
 
@@ -136,8 +118,6 @@ cv_entries("service", view) |>
 cv_entries("prof-dev", view) |>
   year_table("year", "title")
 ```
-
-::::::
 
 :::
 
