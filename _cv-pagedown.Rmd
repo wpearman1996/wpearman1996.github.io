@@ -82,44 +82,23 @@ cat(render_cv_section("teaching", view))
 
 :::
 
-::: {.flowing-section}
-
-# Awards and honours
-
 ```{r}
-cv_entries("award", view) |>
-  year_table("year", "title")
+#| results: asis
+# Balance Awards/Grants/Talks/Service/Professional development between
+# the two columns by estimated content height (allocate_columns()),
+# then split each column at the exact point that fits on the rest of
+# page 1 (split_column()) -- see the long comment above those
+# functions in _common.R for why this is computed manually rather than
+# left to the browser.
+col_alloc <- allocate_columns(c("award", "grant", "talk", "service", "prof-dev"), view)
+left_blocks  <- column_blocks(col_alloc$left, view)
+right_blocks <- column_blocks(col_alloc$right, view)
+page1_budget <- CV_PAGE_BOTTOM_PT - CV_BALANCED_BLOCK_START_PT
+left_split  <- split_column(left_blocks, page1_budget)
+right_split <- split_column(right_blocks, page1_budget)
+cat(render_balanced_block(left_split$page1, right_split$page1))
+cat(render_balanced_block(left_split$rest, right_split$rest))
 ```
-
-# Selected major grants
-
-```{r}
-cv_entries("grant", view) |>
-  year_table("year", "title")
-```
-
-# Selected talks {.talks}
-
-```{r}
-cv_entries("talk", view) |>
-  year_table("year", "title")
-```
-
-# Selected service
-
-```{r}
-cv_entries("service", view) |>
-  year_table("year", "title")
-```
-
-# Professional development {.prof-dev}
-
-```{r}
-cv_entries("prof-dev", view) |>
-  year_table("year", "title")
-```
-
-:::
 
 ::: {.row}
 

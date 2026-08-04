@@ -142,6 +142,173 @@ format_pub_citation <- function(pub) {
   paste(authors_str, year_str, title_str, journal_str, doi_str)
 }
 
+# Display headings for the CV sections balanced by allocate_columns().
+cv_section_titles <- c(
+  award      = "Awards and honours",
+  grant      = "Selected major grants",
+  talk       = "Selected talks",
+  service    = "Selected service",
+  "prof-dev" = "Professional development"
+)
+
+# --- Manual pagination for the CV's balanced Awards/Grants/Talks/
+# Service/Professional-development block --------------------------------
+#
+# The print engine (paged.js, used by pagedown::html_paged) cannot
+# reliably fragment two side-by-side CSS columns across a page break --
+# empirically, whichever column is the *second* DOM child defers its
+# entire remaining content to the next page even when there's still
+# room on the current one (confirmed by swapping which section's
+# content went in which column and watching the bug follow the column
+# position, not the content). Flex, CSS grid, floats and inline-block
+# all showed the same behaviour. To work around it, the page break is
+# computed here in R instead: each column's entries are split into a
+# chunk that's sized to fit what's actually left on page 1 and a
+# remainder chunk, rendered as two separate blocks, so the browser
+# never has to fragment either one itself.
+#
+# The constants below are calibrated against a real rendered PDF via
+# pdftools::pdf_data() (measuring actual entry/heading pixel heights),
+# not guessed from font metrics. CV_BALANCED_BLOCK_START_PT in
+# particular is the measured y-position where this block starts on
+# page 1 (i.e. how much space the Research summary/Contact and
+# Education/Teaching rows above it use) -- re-measure it if that fixed
+# content changes enough to noticeably shift its height; entries added
+# to content/cv_entries.csv don't require any recalibration.
+CV_ENTRY_PAD_PT <- 18
+CV_ENTRY_LINE_PT <- 13.5
+CV_CHARS_PER_LINE <- 58
+CV_HEADING_HEIGHT_PT <- 29
+CV_PAGE_BOTTOM_PT <- 820
+CV_BALANCED_BLOCK_START_PT <- 592
+
+# Display headings for the CV sections balanced below.
+cv_section_titles <- c(
+  award      = "Awards and honours",
+  grant      = "Selected major grants",
+  talk       = "Selected talks",
+  service    = "Selected service",
+  "prof-dev" = "Professional development"
+)
+
+entry_lines <- function(title) pmax(1L, ceiling(nchar(title) / CV_CHARS_PER_LINE))
+entry_height_pt <- function(title) CV_ENTRY_PAD_PT + CV_ENTRY_LINE_PT * entry_lines(title)
+
+section_height_pt <- function(section, view) {
+  d <- cv_entries(section, view)
+  if (nrow(d) == 0) return(0)
+  CV_HEADING_HEIGHT_PT + sum(entry_height_pt(d$title))
+}
+
+# Greedily split `sections` (section names, in their canonical reading
+# order) between the CV's left/right columns so the two columns end up
+# with roughly the same total height -- so a short section (e.g.
+# Awards) doesn't leave a column with unused white space while a
+# taller one (e.g. Grants) is still full of content. Sections are
+# assigned largest-first to whichever column currently has less content
+# (a standard longest-processing-time bin-balancing heuristic), then
+# each column's members are put back in their original canonical order
+# for natural reading. A section's own entries always stay together in
+# this step -- only whole sections move between columns -- so the
+# balance recomputes automatically whenever content/cv_entries.csv
+# changes.
+allocate_columns <- function(sections, view) {
+  heights <- vapply(sections, section_height_pt, numeric(1), view = view)
+  order_by_size <- order(heights, decreasing = TRUE)
+  left <- character(0); right <- character(0)
+  left_h <- 0; right_h <- 0
+  for (i in order_by_size) {
+    if (left_h <= right_h) {
+      left <- c(left, sections[i]); left_h <- left_h + heights[i]
+    } else {
+      right <- c(right, sections[i]); right_h <- right_h + heights[i]
+    }
+  }
+  list(left = sections[sections %in% left], right = sections[sections %in% right])
+}
+
+# Flatten a column's sections into an ordered list of "blocks" -- one
+# per section heading and one per entry row -- each tagged with its
+# calibrated height in points, ready for split_column() to cut at a
+# page boundary.
+column_blocks <- function(sections, view) {
+  blocks <- list()
+  for (sec in sections) {
+    d <- cv_entries(sec, view)
+    if (nrow(d) == 0) next
+    blocks[[length(blocks) + 1]] <- list(type = "heading", section = sec, height = CV_HEADING_HEIGHT_PT)
+    for (i in seq_len(nrow(d))) {
+      blocks[[length(blocks) + 1]] <- list(
+        type = "entry", section = sec,
+        year = d$year[i], title = d$title[i],
+        height = entry_height_pt(d$title[i])
+      )
+    }
+  }
+  blocks
+}
+
+# Split a column's blocks into a "page1" portion that fits within
+# budget_pt and a "rest" portion for the following page. Never leaves
+# a heading stranded alone at the bottom of page 1 with none of its
+# entries following it. If the cut falls in the middle of a section,
+# "rest" gets that section's heading again with a "(cont.)" suffix so
+# it isn't missing a label.
+split_column <- function(blocks, budget_pt) {
+  used <- 0; cut <- 0
+  for (i in seq_along(blocks)) {
+    used_next <- used + blocks[[i]]$height
+    if (used_next > budget_pt) break
+    used <- used_next
+    cut <- i
+  }
+  if (cut > 0 && blocks[[cut]]$type == "heading") cut <- cut - 1
+  page1 <- if (cut > 0) blocks[seq_len(cut)] else list()
+  rest <- if (cut < length(blocks)) blocks[(cut + 1):length(blocks)] else list()
+  if (length(rest) > 0 && rest[[1]]$type == "entry") {
+    sec <- rest[[1]]$section
+    rest <- c(list(list(type = "heading", section = sec, height = CV_HEADING_HEIGHT_PT, cont = TRUE)), rest)
+  }
+  list(page1 = page1, rest = rest)
+}
+
+# Render a list of blocks (from column_blocks()/split_column()) as a
+# markdown/HTML string -- headings become "# ..." lines, consecutive
+# entries are grouped into one <table> each.
+blocks_to_html <- function(blocks) {
+  if (length(blocks) == 0) return("")
+  out <- character(0)
+  rows <- character(0)
+  flush_table <- function() {
+    if (length(rows) == 0) return(invisible())
+    out[[length(out) + 1]] <<- paste0("<table><tbody>", paste(rows, collapse = ""), "</tbody></table>")
+    rows <<- character(0)
+  }
+  for (b in blocks) {
+    if (b$type == "heading") {
+      flush_table()
+      label <- cv_section_titles[[b$section]]
+      if (isTRUE(b$cont)) label <- paste0(label, " (cont.)")
+      out[[length(out) + 1]] <- paste0("\n\n# ", label, "\n\n")
+    } else {
+      rows[[length(rows) + 1]] <- glue::glue("<tr><td>{b$year}</td><td>{b$title}</td></tr>")
+    }
+  }
+  flush_table()
+  paste(out, collapse = "")
+}
+
+# Emit one balanced-columns row (pandoc fenced divs) pairing a left and
+# right list of blocks, for cat()-ing in a results='asis' chunk.
+render_balanced_block <- function(left_blocks, right_blocks) {
+  paste0(
+    "\n\n::: {.balanced-columns}\n\n",
+    ":::::: {.balanced-col .left}\n\n", blocks_to_html(left_blocks), "\n\n::::::\n\n",
+    ":::::: {.balanced-col .right}\n\n", blocks_to_html(right_blocks), "\n\n::::::\n\n",
+    ":::\n\n"
+  )
+}
+
 render_cv_publications <- function(view = "full_cv") {
   # Uses "**N.**" instead of markdown "N." list syntax, because pandoc
   # auto-increments real ordered lists and ignores our own numbering.
