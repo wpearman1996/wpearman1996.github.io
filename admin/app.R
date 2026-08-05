@@ -156,6 +156,10 @@ ui <- fluidPage(
       sidebarLayout(
         sidebarPanel(
           selectInput("recipe_select", "Recipe", choices = NULL),
+          helpText("Password-protected recipes aren't editable here -- their",
+                    "ingredients/instructions live in the gitignored",
+                    "content/recipes_protected.yml, edited by hand. This list",
+                    "only shows the ones safe to store in the public repo."),
           actionButton("recipe_new", "Add new recipe", class = "btn-primary"),
           hr(),
           textInput("recipe_name", "Name"),
@@ -433,9 +437,17 @@ server <- function(input, output, session) {
   ingredient_counter <- reactiveVal(0)
   editing_slug <- reactiveVal(NULL)
 
+  # Protected recipes' ingredients/instructions live outside recipes_data()
+  # entirely (see content/recipes_protected.yml, merged in only at
+  # quarto-render time) -- this editor never has their real content to show,
+  # and saving one from here would silently overwrite it with an empty
+  # ingredient list and drop the `protected: yes` flag. Excluding them from
+  # the dropdown is what actually prevents that, not just a warning label.
+  editable_recipes <- reactive(Filter(function(r) !isTRUE(r$protected), recipes_data()))
+
   update_recipe_choices <- function(select = NULL) {
-    names_list <- vapply(recipes_data(), function(r) r$name, character(1))
-    slugs_list <- vapply(recipes_data(), function(r) r$slug, character(1))
+    names_list <- vapply(editable_recipes(), function(r) r$name, character(1))
+    slugs_list <- vapply(editable_recipes(), function(r) r$slug, character(1))
     choices <- setNames(slugs_list, names_list)
     updateSelectInput(session, "recipe_select", choices = choices, selected = select)
   }
