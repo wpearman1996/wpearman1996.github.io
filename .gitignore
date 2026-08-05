@@ -1,8 +1,18 @@
 /.quarto/
 
+# ORCID API client id/secret and access tokens -- never committed.
+/orcid_sync/credentials.json
+
 # Plaintext password for encrypting content/recipes.yml's protected
 # recipes at render time -- never committed. See recipes.qmd.
 /.recipe_secret
+
+# Ingredients/instructions for password-protected recipes -- kept out
+# of git entirely, since committing them in plaintext (even though
+# docs/protected_recipes.json ships encrypted) would defeat the
+# password protection for anyone just browsing the repo. See
+# recipes.qmd.
+/content/recipes_protected.yml
 
 # LaTeX/knitr build byproducts
 *.knit.md

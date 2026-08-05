@@ -32,6 +32,44 @@ recipes <- yaml::read_yaml(here::here("content", "recipes.yml"))
 is_protected <- function(r) isTRUE(r$protected)
 any_protected <- any(vapply(recipes, is_protected, logical(1)))
 
+# content/recipes.yml (tracked) holds public metadata for every recipe
+# -- including protected ones' name/source, which are always shown even
+# locked -- but never their ingredients/instructions. Those sensitive
+# fields live only in content/recipes_protected.yml (gitignored, never
+# committed), keyed by slug, and get merged in here. This is what
+# actually keeps the protected recipes' content out of the repo: an
+# earlier version kept everything in the one tracked recipes.yml and
+# relied solely on docs/protected_recipes.json being encrypted, but
+# that left the real plaintext content sitting in git history the whole
+# time -- readable by anyone browsing the repo, password or not.
+if (any_protected) {
+  protected_content_path <- here::here("content", "recipes_protected.yml")
+  if (!file.exists(protected_content_path)) {
+    stop(
+      "content/recipes.yml has protected recipes but content/recipes_protected.yml is missing.\n",
+      "Create it at the project root, keyed by slug, with each protected recipe's ",
+      "'instructions' and 'ingredients' (gitignored, never committed) and re-render. ",
+      "See recipes.qmd for the expected format."
+    )
+  }
+  protected_content <- yaml::read_yaml(protected_content_path)
+  protected_slugs <- vapply(Filter(is_protected, recipes), function(r) r$slug, character(1))
+  missing_slugs <- setdiff(protected_slugs, names(protected_content))
+  if (length(missing_slugs) > 0) {
+    stop(
+      "content/recipes_protected.yml is missing content for: ",
+      paste(missing_slugs, collapse = ", ")
+    )
+  }
+  recipes <- lapply(recipes, function(r) {
+    if (is_protected(r)) {
+      r$instructions <- protected_content[[r$slug]]$instructions
+      r$ingredients <- protected_content[[r$slug]]$ingredients
+    }
+    r
+  })
+}
+
 # PBKDF2-HMAC-SHA256 (RFC 8018), implemented by hand since neither
 # base R nor the openssl/digest packages expose it directly. Verified
 # byte-for-byte against Python's hashlib.pbkdf2_hmac for both a single
@@ -209,6 +247,7 @@ if (length(protected_recipes_list) > 0) {
   recipes_yml_path <- here::here("content", "recipes.yml")
   needs_reencrypt <- !file.exists(out_path) ||
     file.info(recipes_yml_path)$mtime > file.info(out_path)$mtime ||
+    file.info(protected_content_path)$mtime > file.info(out_path)$mtime ||
     file.info(secret_path)$mtime > file.info(out_path)$mtime
 
   if (needs_reencrypt) {
