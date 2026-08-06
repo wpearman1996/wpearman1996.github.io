@@ -16,6 +16,10 @@ CV_ENTRIES_PATH <- file.path(PROJECT_ROOT, "content", "cv_entries.csv")
 PUBS_PATH <- file.path(PROJECT_ROOT, "content", "pubs.csv")
 META_PATH <- file.path(PROJECT_ROOT, "content", "cv_meta.yml")
 RECIPES_PATH <- file.path(PROJECT_ROOT, "content", "recipes.yml")
+# Gitignored -- ingredients/instructions for protected recipes. Never
+# committed; only ever read/written locally. See recipes.qmd.
+PROTECTED_RECIPES_PATH <- file.path(PROJECT_ROOT, "content", "recipes_protected.yml")
+PROJECTS_PATH <- file.path(PROJECT_ROOT, "content", "projects.yml")
 
 CV_ENTRIES_COLS <- c("section", "year", "sort_year", "title", "where", "location",
                       "show_full_cv", "show_onepage_cv", "show_website")
@@ -156,10 +160,8 @@ ui <- fluidPage(
       sidebarLayout(
         sidebarPanel(
           selectInput("recipe_select", "Recipe", choices = NULL),
-          helpText("Password-protected recipes aren't editable here -- their",
-                    "ingredients/instructions live in the gitignored",
-                    "content/recipes_protected.yml, edited by hand. This list",
-                    "only shows the ones safe to store in the public repo."),
+          helpText("Password-protected recipes aren't editable here -- use the",
+                    "\"Locked recipes\" tab for those instead."),
           actionButton("recipe_new", "Add new recipe", class = "btn-primary"),
           hr(),
           textInput("recipe_name", "Name"),
@@ -181,6 +183,58 @@ ui <- fluidPage(
           tableOutput("recipe_preview"),
           width = 7
         )
+      )
+    ),
+
+    tabPanel("Locked recipes",
+      br(),
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("locked_recipe_select", "Locked recipe", choices = NULL),
+          helpText("Ingredients/instructions saved here go to the gitignored",
+                    "content/recipes_protected.yml, never committed to git --",
+                    "everything else (name, source, servings) is public",
+                    "metadata that stays in the tracked content/recipes.yml,",
+                    "same as public recipes."),
+          actionButton("locked_recipe_new", "Add new locked recipe", class = "btn-primary"),
+          hr(),
+          textInput("locked_recipe_name", "Name"),
+          textInput("locked_recipe_slug", "Slug (unique, no spaces -- auto-filled from name)"),
+          numericInput("locked_recipe_servings", "Base servings", value = 4, min = 1),
+          textInput("locked_recipe_source_name", "Source name (e.g. \"Otago Daily Times\")"),
+          textInput("locked_recipe_source_url", "Source URL"),
+          textAreaInput("locked_recipe_instructions", "Instructions", rows = 4),
+          h4("Ingredients"),
+          uiOutput("locked_ingredient_rows"),
+          actionButton("locked_ingredient_add", "+ Add ingredient"),
+          hr(),
+          actionButton("locked_recipe_save", "Save locked recipe", class = "btn-success"),
+          actionButton("locked_recipe_delete", "Delete locked recipe", class = "btn-danger"),
+          width = 5
+        ),
+        mainPanel(
+          h4("Preview"),
+          tableOutput("locked_recipe_preview"),
+          width = 7
+        )
+      )
+    ),
+
+    tabPanel("Projects",
+      br(),
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("project_select", "Project", choices = NULL),
+          actionButton("project_new", "Add new project", class = "btn-primary"),
+          hr(),
+          textInput("project_title", "Title"),
+          textAreaInput("project_body", "Body (markdown -- can include links, italics, etc.)",
+                         rows = 12, width = "100%"),
+          actionButton("project_save", "Save project", class = "btn-success"),
+          actionButton("project_delete", "Delete project", class = "btn-danger"),
+          width = 5
+        ),
+        mainPanel(width = 7)
       )
     )
   )
@@ -597,6 +651,261 @@ server <- function(input, output, session) {
     clear_recipe_form()
     update_recipe_choices()
     showNotification("Recipe deleted.", type = "message")
+  })
+
+  # ============================ Locked recipes ============================
+  # Mirrors the Recipes tab above, but for protected == TRUE entries. Public
+  # metadata (name/slug/servings/source) still goes to the tracked
+  # RECIPES_PATH -- shared with the public Recipes tab via the same
+  # recipes_data() reactive, so either tab saving keeps both dropdowns in
+  # sync. Only ingredients/instructions go to the gitignored
+  # PROTECTED_RECIPES_PATH, keyed by slug.
+
+  read_protected_content <- function() {
+    if (file.exists(PROTECTED_RECIPES_PATH)) yaml::read_yaml(PROTECTED_RECIPES_PATH) else list()
+  }
+
+  locked_content_data <- reactiveVal(read_protected_content())
+  locked_ingredient_ids <- reactiveVal(integer(0))
+  locked_ingredient_initial <- reactiveVal(list())
+  locked_ingredient_counter <- reactiveVal(0)
+  locked_editing_slug <- reactiveVal(NULL)
+
+  locked_recipes <- reactive(Filter(function(r) isTRUE(r$protected), recipes_data()))
+
+  update_locked_recipe_choices <- function(select = NULL) {
+    names_list <- vapply(locked_recipes(), function(r) r$name, character(1))
+    slugs_list <- vapply(locked_recipes(), function(r) r$slug, character(1))
+    choices <- setNames(slugs_list, names_list)
+    updateSelectInput(session, "locked_recipe_select", choices = choices, selected = select)
+  }
+  observe(update_locked_recipe_choices())
+
+  set_locked_ingredient_rows <- function(ingredients) {
+    n <- length(ingredients)
+    ids <- if (n == 0) integer(0) else (locked_ingredient_counter() + 1):(locked_ingredient_counter() + n)
+    locked_ingredient_counter(locked_ingredient_counter() + n)
+    vals <- stats::setNames(
+      lapply(ingredients, function(i) list(name = i$name %||% "", amount = i$amount %||% 0, unit = i$unit %||% "")),
+      as.character(ids)
+    )
+    locked_ingredient_initial(vals)
+    locked_ingredient_ids(ids)
+  }
+
+  output$locked_ingredient_rows <- renderUI({
+    ids <- locked_ingredient_ids()
+    if (length(ids) == 0) return(p("No ingredients yet -- click \"Add ingredient\"."))
+    vals <- isolate(locked_ingredient_initial())
+    tagList(lapply(ids, function(id) {
+      v <- vals[[as.character(id)]] %||% list(name = "", amount = 0, unit = "")
+      fluidRow(
+        column(5, textInput(paste0("locked_ing_name_", id), NULL, value = v$name, placeholder = "Name")),
+        column(3, numericInput(paste0("locked_ing_amount_", id), NULL, value = v$amount)),
+        column(3, textInput(paste0("locked_ing_unit_", id), NULL, value = v$unit, placeholder = "Unit")),
+        column(1, actionButton(paste0("locked_ing_remove_", id), "✕"))
+      )
+    }))
+  })
+
+  observeEvent(input$locked_ingredient_add, {
+    id <- locked_ingredient_counter() + 1
+    locked_ingredient_counter(id)
+    locked_ingredient_initial(c(locked_ingredient_initial(), stats::setNames(list(list(name = "", amount = 0, unit = "")), as.character(id))))
+    locked_ingredient_ids(c(locked_ingredient_ids(), id))
+  })
+
+  observe({
+    lapply(locked_ingredient_ids(), function(id) {
+      btn <- paste0("locked_ing_remove_", id)
+      observeEvent(input[[btn]], {
+        locked_ingredient_ids(setdiff(locked_ingredient_ids(), id))
+      }, ignoreInit = TRUE, once = TRUE)
+    })
+  })
+
+  clear_locked_recipe_form <- function() {
+    locked_editing_slug(NULL)
+    updateTextInput(session, "locked_recipe_name", value = "")
+    updateTextInput(session, "locked_recipe_slug", value = "")
+    updateNumericInput(session, "locked_recipe_servings", value = 4)
+    updateTextInput(session, "locked_recipe_source_name", value = "")
+    updateTextInput(session, "locked_recipe_source_url", value = "")
+    updateTextAreaInput(session, "locked_recipe_instructions", value = "")
+    set_locked_ingredient_rows(list())
+  }
+
+  observeEvent(input$locked_recipe_new, {
+    clear_locked_recipe_form()
+    updateSelectInput(session, "locked_recipe_select", selected = character(0))
+  })
+
+  observeEvent(input$locked_recipe_name, {
+    if (is.null(locked_editing_slug())) {
+      slug <- tolower(gsub("[^a-z0-9]+", "_", tolower(input$locked_recipe_name)))
+      slug <- gsub("^_|_$", "", slug)
+      updateTextInput(session, "locked_recipe_slug", value = slug)
+    }
+  })
+
+  observeEvent(input$locked_recipe_select, {
+    req(input$locked_recipe_select)
+    r <- Filter(function(x) x$slug == input$locked_recipe_select, locked_recipes())
+    req(length(r) == 1)
+    r <- r[[1]]
+    locked_editing_slug(r$slug)
+    updateTextInput(session, "locked_recipe_name", value = r$name)
+    updateTextInput(session, "locked_recipe_slug", value = r$slug)
+    updateNumericInput(session, "locked_recipe_servings", value = r$base_servings)
+    updateTextInput(session, "locked_recipe_source_name", value = r$source_name %||% "")
+    updateTextInput(session, "locked_recipe_source_url", value = r$source_url %||% "")
+    content <- locked_content_data()[[r$slug]]
+    updateTextAreaInput(session, "locked_recipe_instructions", value = trimws(content$instructions %||% ""))
+    set_locked_ingredient_rows(content$ingredients)
+  })
+
+  current_locked_ingredients <- reactive({
+    ids <- locked_ingredient_ids()
+    lapply(ids, function(id) {
+      list(
+        name = input[[paste0("locked_ing_name_", id)]] %||% "",
+        amount = input[[paste0("locked_ing_amount_", id)]] %||% 0,
+        unit = input[[paste0("locked_ing_unit_", id)]] %||% ""
+      )
+    })
+  })
+
+  output$locked_recipe_preview <- renderTable({
+    ings <- current_locked_ingredients()
+    req(length(ings) > 0)
+    do.call(rbind, lapply(ings, as.data.frame))
+  })
+
+  observeEvent(input$locked_recipe_save, {
+    if (!nzchar(trimws(input$locked_recipe_name)) || !nzchar(trimws(input$locked_recipe_slug))) {
+      showNotification("Name and slug are required.", type = "error"); return()
+    }
+    ings <- current_locked_ingredients()
+    if (length(ings) == 0 || any(!vapply(ings, function(i) nzchar(i$name), logical(1)))) {
+      showNotification("Every ingredient needs a name.", type = "error"); return()
+    }
+    slug <- input$locked_recipe_slug
+
+    new_meta <- list(
+      name = input$locked_recipe_name, slug = slug,
+      base_servings = input$locked_recipe_servings, protected = TRUE
+    )
+    if (nzchar(trimws(input$locked_recipe_source_name))) new_meta$source_name <- input$locked_recipe_source_name
+    if (nzchar(trimws(input$locked_recipe_source_url))) new_meta$source_url <- input$locked_recipe_source_url
+
+    all_recipes <- recipes_data()
+    other_slugs <- vapply(all_recipes, function(r) r$slug, character(1))
+    if (is.null(locked_editing_slug())) {
+      if (slug %in% other_slugs) {
+        showNotification("That slug is already used by another recipe.", type = "error"); return()
+      }
+      all_recipes <- c(all_recipes, list(new_meta))
+    } else {
+      keep <- other_slugs != locked_editing_slug()
+      if (slug != locked_editing_slug() && slug %in% other_slugs[keep]) {
+        showNotification("That slug is already used by another recipe.", type = "error"); return()
+      }
+      all_recipes <- c(Filter(function(r) r$slug != locked_editing_slug(), all_recipes), list(new_meta))
+    }
+    yaml::write_yaml(all_recipes, RECIPES_PATH)
+    recipes_data(all_recipes)
+
+    content <- locked_content_data()
+    if (!is.null(locked_editing_slug()) && locked_editing_slug() != slug) {
+      content[[locked_editing_slug()]] <- NULL
+    }
+    content[[slug]] <- list(instructions = input$locked_recipe_instructions, ingredients = ings)
+    yaml::write_yaml(content, PROTECTED_RECIPES_PATH)
+    locked_content_data(content)
+
+    locked_editing_slug(slug)
+    update_locked_recipe_choices(select = slug)
+    showNotification("Locked recipe saved.", type = "message")
+  })
+
+  observeEvent(input$locked_recipe_delete, {
+    req(locked_editing_slug())
+    all_recipes <- Filter(function(r) r$slug != locked_editing_slug(), recipes_data())
+    yaml::write_yaml(all_recipes, RECIPES_PATH)
+    recipes_data(all_recipes)
+
+    content <- locked_content_data()
+    content[[locked_editing_slug()]] <- NULL
+    yaml::write_yaml(content, PROTECTED_RECIPES_PATH)
+    locked_content_data(content)
+
+    clear_locked_recipe_form()
+    update_locked_recipe_choices()
+    showNotification("Locked recipe deleted.", type = "message")
+  })
+
+  # ============================ Projects ==================================
+
+  projects_data <- reactiveVal(yaml::read_yaml(PROJECTS_PATH))
+  project_editing_idx <- reactiveVal(NULL)
+
+  update_project_choices <- function(select = NULL) {
+    titles <- vapply(projects_data(), function(p) p$title, character(1))
+    choices <- stats::setNames(seq_along(titles), titles)
+    updateSelectInput(session, "project_select", choices = choices, selected = select)
+  }
+  observe(update_project_choices())
+
+  clear_project_form <- function() {
+    project_editing_idx(NULL)
+    updateTextInput(session, "project_title", value = "")
+    updateTextAreaInput(session, "project_body", value = "")
+  }
+
+  observeEvent(input$project_new, {
+    clear_project_form()
+    updateSelectInput(session, "project_select", selected = character(0))
+  })
+
+  observeEvent(input$project_select, {
+    req(input$project_select)
+    idx <- as.integer(input$project_select)
+    p <- projects_data()[[idx]]
+    req(!is.null(p))
+    project_editing_idx(idx)
+    updateTextInput(session, "project_title", value = p$title)
+    updateTextAreaInput(session, "project_body", value = trimws(p$body))
+  })
+
+  observeEvent(input$project_save, {
+    if (!nzchar(trimws(input$project_title)) || !nzchar(trimws(input$project_body))) {
+      showNotification("Title and body are required.", type = "error"); return()
+    }
+    new_project <- list(title = input$project_title, body = input$project_body)
+    all_projects <- projects_data()
+    if (is.null(project_editing_idx())) {
+      all_projects <- c(all_projects, list(new_project))
+      new_idx <- length(all_projects)
+    } else {
+      all_projects[[project_editing_idx()]] <- new_project
+      new_idx <- project_editing_idx()
+    }
+    yaml::write_yaml(all_projects, PROJECTS_PATH)
+    projects_data(all_projects)
+    project_editing_idx(new_idx)
+    update_project_choices(select = new_idx)
+    showNotification("Project saved.", type = "message")
+  })
+
+  observeEvent(input$project_delete, {
+    req(project_editing_idx())
+    all_projects <- projects_data()
+    all_projects[[project_editing_idx()]] <- NULL
+    yaml::write_yaml(all_projects, PROJECTS_PATH)
+    projects_data(all_projects)
+    clear_project_form()
+    update_project_choices()
+    showNotification("Project deleted.", type = "message")
   })
 
 }
