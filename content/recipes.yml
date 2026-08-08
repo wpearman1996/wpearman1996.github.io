@@ -51,12 +51,6 @@
   protected: yes
   source_name: Otago Daily Times — Aurora Cafe (Jillian Peacock)
   source_url: https://www.odt.co.nz/life-and-style/food-and-wine/ask-a-chef-aurora-cafes-anzac-caramel-slice-oqf2g6n3
-- name: The Food Lab's Chocolate Chip Cookies
-  slug: food_lab_chocolate_chip_cookies
-  base_servings: 28
-  protected: yes
-  source_name: Serious Eats (J. Kenji López-Alt)
-  source_url: https://www.seriouseats.com/the-food-lab-best-chocolate-chip-cookie-recipe
 - name: Gooey Fudgy Brownies
   slug: gooey_fudgy_brownies
   base_servings: 16
@@ -101,12 +95,6 @@
   protected: yes
   source_name: The Spinoff
   source_url: https://thespinoff.co.nz/kai/11-04-2019/recipe-imas-hot-cross-buns
-- name: Ligurian Focaccia
-  slug: ligurian_focaccia
-  base_servings: 1
-  protected: yes
-  source_name: Salt Fat Acid Heat (Samin Nosrat)
-  source_url: https://www.saltfatacidheat.com/fat/ligurian-focaccia
 - name: Grandmum's Carrot Cake
   slug: grandmums_carrot_cake
   base_servings: 10
@@ -274,3 +262,21 @@
     unit: Tbsp
   source_name: Adapted from thia.codes
   source_url: https://thia.codes/newbagels.html
+- name: Chocolate Chip Cookies
+  slug: food_lab_chocolate_chip_cookies
+  base_servings: 28
+  protected: yes
+  source_name: Serious Eats (J. Kenji López-Alt)
+  source_url: https://www.seriouseats.com/the-food-lab-best-chocolate-chip-cookie-recipe
+- name: Focaccia
+  slug: ligurian_focaccia
+  base_servings: 1
+  protected: yes
+  source_name: Salt Fat Acid Heat (Samin Nosrat)
+  source_url: https://www.saltfatacidheat.com/fat/ligurian-focaccia
+- name: Liege Waffles
+  slug: liege_waffles
+  base_servings: 4
+  protected: yes
+  source_name: Smitten Kitchen
+  source_url: https://smittenkitchen.com/2015/05/liege-waffles/

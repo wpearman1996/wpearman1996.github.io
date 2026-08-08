@@ -1,0 +1,28 @@
+---
+title: "Lab"
+description: "Tools and 3D prints I use in the lab."
+---
+
+```{r}
+#| include: false
+# platelight.html lives at the project root as source, tracked in git;
+# copying it into docs/ here (rather than relying on Quarto's own
+# resource-copying, whose behaviour differs between a full project
+# render and rendering this one file) keeps this page self-sufficient
+# no matter how it's rendered -- same reasoning as recipes.qmd handling
+# its own encryption step inline instead of assuming some other page
+# already did it.
+file.copy(here::here("platelight.html"), here::here("docs", "platelight.html"), overwrite = TRUE)
+```
+
+## PlateLight
+
+A touchscreen well-plate illuminator for guiding pipetting by hand -- lights up the target well so you can find it without squinting at a plate map. Runs entirely in the browser, fullscreen, on a tablet propped next to the plate.
+
+[Open PlateLight](platelight.html){.btn .btn-primary target="_blank"}
+
+## 3D Prints
+
+Things I've designed and printed for the lab -- racks, adapters, holders -- with photos and downloadable models.
+
+[Browse 3D prints](prints.qmd){.btn .btn-primary}

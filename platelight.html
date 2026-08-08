@@ -1,0 +1,360 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="screen-orientation" content="landscape">
+<title>PlateLight</title>
+<style>
+  :root{
+    --bg:#08090b; --panel:#12141a; --line:#232733; --ink:#e7ecf3;
+    --dim:#5b6473; --accent:#ff2b2b; --good:#39d98a;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:var(--mono);overflow:hidden;touch-action:none;overscroll-behavior:none;
+    user-select:none;-webkit-user-select:none}
+  #stage{position:fixed;inset:0;touch-action:none}
+  /* locked: hide the settings entry points; only Advance/Back stay live */
+  body.locked #gear,body.locked #rail{display:none}
+  body.locked #tag{color:var(--good)}
+  svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* Control rail — lives on one edge so it stays outside the plate footprint */
+  #rail{position:fixed;top:0;left:0;height:100%;width:300px;max-width:82vw;
+    background:linear-gradient(180deg,#12141a,#0d0f14);border-right:1px solid var(--line);
+    padding:14px 16px 20px;overflow-y:auto;transform:translateX(-101%);
+    transition:transform .18s ease;z-index:20;box-shadow:2px 0 24px #0008}
+  #rail.open{transform:translateX(0)}
+  #gear{position:fixed;top:12px;left:12px;z-index:30;width:44px;height:44px;
+    border-radius:11px;border:1px solid var(--line);background:#12141aee;color:var(--ink);
+    font-size:20px;line-height:1}
+  h1{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
+    margin:2px 0 14px;font-weight:600}
+  .grp{border-top:1px solid var(--line);padding:12px 0 4px;margin-top:6px}
+  .grp:first-of-type{border-top:0;margin-top:0}
+  label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--dim);margin:0 0 5px}
+  .row{display:flex;gap:8px;align-items:center;margin-bottom:11px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  input[type=number],select,textarea{width:100%;background:#0a0c10;border:1px solid var(--line);
+    color:var(--ink);border-radius:8px;padding:8px;font-family:var(--mono);font-size:13px}
+  textarea{height:88px;resize:vertical;line-height:1.5}
+  input[type=color]{width:44px;height:30px;padding:0;border:1px solid var(--line);
+    border-radius:7px;background:#0a0c10}
+  button.btn{flex:1;background:#1a1e27;border:1px solid var(--line);color:var(--ink);
+    border-radius:9px;padding:10px;font-family:var(--mono);font-size:13px;letter-spacing:.02em}
+  button.btn:active{background:#232838}
+  button.tog{flex:1;background:#0a0c10;border:1px solid var(--line);color:var(--dim);
+    border-radius:9px;padding:9px;font-size:12px}
+  button.tog.on{background:var(--accent);border-color:var(--accent);color:#150000;font-weight:700}
+  .val{font-size:12px;color:var(--ink);min-width:44px;text-align:right}
+  .hint{font-size:10px;color:var(--dim);line-height:1.5;margin:2px 0 0}
+
+  /* Status strip — top edge, out of the plate area, shows target well + label */
+  #status{position:fixed;top:12px;left:66px;right:12px;z-index:15;display:flex;
+    gap:12px;align-items:center;pointer-events:none}
+  #well{font-size:26px;font-weight:700;letter-spacing:.04em}
+  #lab{font-size:15px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #count{margin-left:auto;font-size:12px;color:var(--dim)}
+
+  /* Big advance / back controls — bottom edge, thumb-reachable, outside plate */
+  #drive{position:fixed;bottom:0;left:0;right:0;z-index:15;display:flex;gap:10px;
+    padding:12px;background:linear-gradient(0deg,#08090bE6,#08090b00)}
+  #drive button{border:1px solid var(--line);border-radius:13px;font-family:var(--mono);
+    color:var(--ink);background:#12141a;font-size:15px;padding:16px}
+  #back{flex:1}
+  #adv{flex:3;background:var(--accent);border-color:var(--accent);color:#150000;font-weight:800;
+    letter-spacing:.03em}
+  #adv:active{filter:brightness(.85)}
+  .calib #drive,.calib #status{opacity:.25}
+  #tag{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);z-index:15;
+    font-size:10px;letter-spacing:.2em;color:#333a46;text-transform:uppercase}
+</style>
+
+<div id="stage"><svg id="svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg></div>
+
+<div id="status"><span id="well">—</span><span id="lab"></span><span id="count"></span></div>
+<div id="tag">platelight</div>
+<div id="drive"><button id="back">◀ Back</button><button id="adv">Advance ▶</button></div>
+
+<button id="gear">≡</button>
+<div id="rail">
+  <h1>PlateLight</h1>
+
+  <div class="grp">
+    <div class="row"><button class="tog" id="mCal">Calibrate</button><button class="btn" id="full">Fullscreen</button></div>
+    <div class="row"><button class="btn" id="lock">Lock screen</button></div>
+    <p class="hint">Calibrate shows every well as a ring so you can line the grid up to a real plate. Lock hides all settings so nothing drifts mid-run — long-press the "platelight" label to unlock.</p>
+  </div>
+
+  <div class="grp">
+    <label>Plate</label>
+    <div class="row">
+      <select id="fmt">
+        <option value="8x12">96 well · 8×12</option>
+        <option value="16x24">384 well · 16×24</option>
+        <option value="8x6">48 well · 8×6</option>
+      </select>
+    </div>
+    <label>Fill order</label>
+    <div class="row">
+      <button class="tog on" id="oCol">Down columns</button>
+      <button class="tog" id="oRow">Across rows</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <label>Alignment — origin X <span class="val" id="vox"></span></label>
+    <input type="range" id="ox" min="0" max="1000" value="90">
+    <label>Origin Y <span class="val" id="voy"></span></label>
+    <input type="range" id="oy" min="0" max="1000" value="90">
+    <label>Well pitch (spacing) <span class="val" id="vp"></span></label>
+    <input type="range" id="pitch" min="8" max="120" value="46" step="0.5">
+    <label>Spot size <span class="val" id="vr"></span></label>
+    <input type="range" id="rad" min="4" max="80" value="20" step="0.5">
+    <p class="hint">Pitch = centre-to-centre gap. Nudge origin + pitch until the rings sit dead under your wells, then it's fixed for this holder.</p>
+  </div>
+
+  <div class="grp">
+    <label>Light</label>
+    <div class="row">
+      <input type="color" id="col" value="#ff2b2b">
+      <button class="tog on" id="sDot">Dot</button>
+      <button class="tog" id="sRing">Ring</button>
+    </div>
+    <label>Brightness <span class="val" id="vb"></span></label>
+    <input type="range" id="bri" min="15" max="100" value="100">
+    <p class="hint">Dot lights under the well (clear plates). Ring lights the rim (white/opaque plates).</p>
+  </div>
+
+  <div class="grp">
+    <label>Plan — one per line: <b>well,label</b> or just <b>label</b></label>
+    <textarea id="plan" placeholder="A1,DAPH-001&#10;B1,DAPH-002&#10;C1,blank"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="loadPlan">Load plan</button>
+      <button class="btn" id="seq">Fill all</button>
+    </div>
+    <p class="hint">No wells given → labels drop into wells in fill order. Blank → every well, in order.</p>
+  </div>
+
+  <div class="grp">
+    <div class="row">
+      <button class="btn" id="reset">Reset run</button>
+      <button class="btn" id="csv">Export log</button>
+    </div>
+    <p class="hint" id="logn">0 wells logged.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const svg = document.getElementById('svg');
+  const S = 1000; // svg coordinate space; maps 1:1 onto viewport via preserveAspectRatio=none
+  let px = () => window.innerWidth, py = () => window.innerHeight;
+
+  // --- state ---
+  const st = {
+    rows:8, cols:12, order:'col',
+    ox:90, oy:90, pitch:46, rad:20,
+    colour:'#ff2b2b', mode:'dot', bri:100,
+    calib:false,
+    seqList:[],          // ordered [{well,label}]
+    idx:0,
+    done:{},             // well -> {label, t}
+  };
+
+  // persist calibration to the device (won't persist in the in-chat preview; that's fine)
+  const KEY='platelight.v1';
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({
+    rows:st.rows,cols:st.cols,order:st.order,ox:st.ox,oy:st.oy,pitch:st.pitch,
+    rad:st.rad,colour:st.colour,mode:st.mode,bri:st.bri})); }catch(e){} }
+  function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s) Object.assign(st,s);}catch(e){} }
+  load();
+
+  // --- well helpers ---
+  const rowLetter = r => { // A..Z then AA.. for 384
+    let s=''; r++; while(r>0){ s=String.fromCharCode(65+(r-1)%26)+s; r=Math.floor((r-1)/26);} return s; };
+  const wellName = (r,c) => rowLetter(r)+(c+1);
+
+  function orderedWells(){
+    const out=[];
+    if(st.order==='col'){ for(let c=0;c<st.cols;c++) for(let r=0;r<st.rows;r++) out.push([r,c]); }
+    else { for(let r=0;r<st.rows;r++) for(let c=0;c<st.cols;c++) out.push([r,c]); }
+    return out;
+  }
+
+  // build seqList: default = every well in fill order, unlabelled
+  function buildSequential(){
+    st.seqList = orderedWells().map(([r,c])=>({well:wellName(r,c), label:''}));
+    st.idx=0; st.done={}; render(); updStatus();
+  }
+
+  function loadPlan(){
+    const lines = document.getElementById('plan').value.split('\n').map(l=>l.trim()).filter(Boolean);
+    if(!lines.length){ buildSequential(); return; }
+    const order = orderedWells().map(([r,c])=>wellName(r,c));
+    const hasWell = /^[A-Za-z]{1,2}\s*\d{1,2}\s*,/.test(lines[0]);
+    let list;
+    if(hasWell){
+      list = lines.map(l=>{ const i=l.indexOf(','); return {well:l.slice(0,i).replace(/\s+/g,'').toUpperCase(), label:l.slice(i+1).trim()}; });
+    } else {
+      list = lines.map((l,i)=>({well: order[i], label:l})).filter(x=>x.well);
+    }
+    st.seqList=list; st.idx=0; st.done={}; render(); updStatus();
+  }
+
+  // --- rendering ---
+  function wellCenter(r,c){
+    const sx = st.ox + c*st.pitch;
+    const sy = st.oy + r*st.pitch;
+    return [sx, sy];
+  }
+  function toScreen(sx,sy){ return [ sx/ (1000/px()*(px()/px())) , sy ]; } // unused; we draw in svg space directly
+
+  function render(){
+    // draw in svg user units; viewBox is 0..1000 but preserveAspectRatio=none stretches to viewport,
+    // so we instead set viewBox to actual pixel size for 1:1 control.
+    svg.setAttribute('viewBox', `0 0 ${px()} ${py()}`);
+    const targetWell = st.seqList[st.idx] ? st.seqList[st.idx].well : null;
+    let html='';
+    const rgb = st.colour;
+    const op = st.bri/100;
+    for(let r=0;r<st.rows;r++) for(let c=0;c<st.cols;c++){
+      const [x,y]=wellCenter(r,c);
+      const name=wellName(r,c);
+      const isTarget = name===targetWell;
+      const isDone = !!st.done[name];
+      if(st.calib){
+        html+=`<circle cx="${x}" cy="${y}" r="${st.rad}" fill="none" stroke="#3a4150" stroke-width="1.5"/>`;
+        continue;
+      }
+      if(isTarget){
+        if(st.mode==='dot'){
+          html+=`<circle cx="${x}" cy="${y}" r="${st.rad*1.7}" fill="${rgb}" opacity="${0.25*op}"/>`;
+          html+=`<circle cx="${x}" cy="${y}" r="${st.rad}" fill="${rgb}" opacity="${op}"/>`;
+        } else {
+          html+=`<circle cx="${x}" cy="${y}" r="${st.rad}" fill="none" stroke="${rgb}" stroke-width="${Math.max(3,st.rad*0.42)}" opacity="${op}"/>`;
+        }
+      } else if(isDone){
+        html+=`<circle cx="${x}" cy="${y}" r="${Math.max(2,st.rad*0.28)}" fill="${st.mode==='dot'?rgb:'none'}" stroke="${rgb}" stroke-width="1" opacity="${0.32*op}"/>`;
+      }
+    }
+    svg.innerHTML=html;
+  }
+
+  function updStatus(){
+    const cur=st.seqList[st.idx];
+    document.getElementById('well').textContent = cur? cur.well : '—';
+    document.getElementById('lab').textContent  = cur? (cur.label||'') : (st.seqList.length?'complete':'');
+    const total=st.seqList.length, doneN=Object.keys(st.done).length;
+    document.getElementById('count').textContent = total? `${Math.min(st.idx,total)}/${total}` : '';
+    document.getElementById('logn').textContent = `${doneN} well${doneN===1?'':'s'} logged.`;
+  }
+
+  // --- run control ---
+  function advance(){
+    const cur=st.seqList[st.idx];
+    if(cur && !st.done[cur.well]) st.done[cur.well]={label:cur.label, t:new Date().toISOString()};
+    if(st.idx < st.seqList.length) st.idx++;
+    render(); updStatus();
+  }
+  function back(){
+    if(st.idx>0){ st.idx--; const cur=st.seqList[st.idx]; if(cur) delete st.done[cur.well]; }
+    render(); updStatus();
+  }
+
+  function exportCSV(){
+    const rows=[['order','well','label','timestamp']];
+    let n=0;
+    for(const it of st.seqList){ const d=st.done[it.well]; if(d){ rows.push([++n, it.well, d.label, d.t]); } }
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`platelight_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.csv`;
+    a.click();
+  }
+
+  // --- wire up UI ---
+  const $=id=>document.getElementById(id);
+  $('gear').onclick=()=>$('rail').classList.toggle('open');
+
+  function setFmt(v){ const [r,c]=v.split('x').map(Number); st.rows=r; st.cols=c; buildSequential(); save(); }
+  $('fmt').value=`${st.rows}x${st.cols}`;
+  $('fmt').onchange=e=>setFmt(e.target.value);
+
+  function setOrder(o){ st.order=o; $('oCol').classList.toggle('on',o==='col'); $('oRow').classList.toggle('on',o==='row'); buildSequential(); save(); }
+  $('oCol').onclick=()=>setOrder('col'); $('oRow').onclick=()=>setOrder('row');
+
+  const sliders=[['ox','ox','vox',v=>v|0],['oy','oy','voy',v=>v|0],['pitch','pitch','vp',v=>(+v).toFixed(1)],['rad','rad','vr',v=>(+v).toFixed(1)],['bri','bri','vb',v=>v+'%']];
+  sliders.forEach(([id,key,vid,fmt])=>{
+    const el=$(id); el.value=st[key]; $(vid).textContent=fmt(st[key]);
+    el.oninput=e=>{ st[key]=+e.target.value; $(vid).textContent=fmt(st[key]); render(); save(); };
+  });
+  // origin sliders scale to screen size
+  function sizeSliders(){ $('ox').max=px(); $('oy').max=py(); }
+
+  $('col').value=st.colour;
+  $('col').oninput=e=>{ st.colour=e.target.value; render(); save(); };
+  function setMode(m){ st.mode=m; $('sDot').classList.toggle('on',m==='dot'); $('sRing').classList.toggle('on',m==='ring'); render(); save(); }
+  $('sDot').onclick=()=>setMode('dot'); $('sRing').onclick=()=>setMode('ring');
+  setMode(st.mode);
+
+  function setCalib(v){ st.calib=v; $('mCal').classList.toggle('on',v); document.body.classList.toggle('calib',v); render(); }
+  $('mCal').onclick=()=>setCalib(!st.calib);
+
+  $('loadPlan').onclick=loadPlan;
+  $('seq').onclick=()=>{ $('plan').value=''; buildSequential(); };
+  $('reset').onclick=()=>{ st.idx=0; st.done={}; render(); updStatus(); };
+  $('csv').onclick=exportCSV;
+
+  $('adv').onclick=advance; $('back').onclick=back;
+  // hardware advance: Enter / Space / barcode-scanner Enter, or ArrowRight; ArrowLeft = back
+  window.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '||e.key==='ArrowRight'){ e.preventDefault(); advance(); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); back(); }
+  });
+
+  $('full').onclick=async()=>{
+    try{ await document.documentElement.requestFullscreen(); }catch(e){}
+    try{ await screen.orientation.lock('landscape'); }catch(e){}
+  };
+
+  // --- lock: freeze all settings so calibration can't drift; long-press label to unlock ---
+  let locked=false;
+  function setLock(v){ locked=v; document.body.classList.toggle('locked',v); if(v) $('rail').classList.remove('open'); }
+  $('lock').onclick=()=>setLock(true);
+  let lpTimer;
+  const tag=$('tag');
+  const startLP=()=>{ lpTimer=setTimeout(()=>setLock(false),800); };
+  const cancelLP=()=>clearTimeout(lpTimer);
+  tag.addEventListener('pointerdown',startLP);
+  tag.addEventListener('pointerup',cancelLP);
+  tag.addEventListener('pointerleave',cancelLP);
+  tag.addEventListener('pointercancel',cancelLP);
+
+  // --- block pinch-zoom / double-tap-zoom / scroll bounce (Android ignores user-scalable=no) ---
+  document.addEventListener('gesturestart',e=>e.preventDefault());
+  document.addEventListener('gesturechange',e=>e.preventDefault());
+  document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
+  let lastTap=0;
+  document.addEventListener('touchend',e=>{ const n=Date.now(); if(n-lastTap<=300) e.preventDefault(); lastTap=n; },{passive:false});
+  window.addEventListener('wheel',e=>{ if(e.ctrlKey) e.preventDefault(); },{passive:false}); // trackpad/ctrl zoom
+
+  // keep screen awake on the tablet
+  let wl=null;
+  async function wake(){ try{ if('wakeLock'in navigator){ wl=await navigator.wakeLock.request('screen'); } }catch(e){} }
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') wake(); });
+  wake();
+
+  window.addEventListener('resize',()=>{ sizeSliders(); render(); });
+
+  // init
+  sizeSliders();
+  buildSequential();
+  render(); updStatus();
+})();
+</script>

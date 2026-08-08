@@ -1,32 +1,36 @@
-name: "William S. Pearman"
-title: "Dr"
-position: "Research Fellow"
-employer: "University of Auckland"
-email: "william.pearman@auckland.ac.nz"
-website: "https://profiles.auckland.ac.nz/william-pearman"
-scholar_id: "Gn6BJkoAAAAJ"
-scholar_url: "https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&hl=en"
-github: "https://github.com/wpearman1996"
-bluesky: "https://bsky.app/profile/williampearman.bsky.social"
-linkedin: "https://www.linkedin.com/in/william-pearman-6b3188392/"
-orcid: "0000-0002-7265-8499"
-orcid_url: "https://orcid.org/0000-0002-7265-8499"
-speciality: >
-  I am a broadly trained molecular and microbial ecologist with principal
-  expertise in population genomics and microbial ecology. I specialise in
-  developing eco-evolutionary simulations of microbial communities to
-  develop hypotheses which I then test using observational data and
-  experiments. My research background is a combination of population
-  genomics and microbial ecology, with my current research interests
-  working to align these two fields to understand the evolution of
-  host-microbe relationships. My current work combines eco-evolutionary
-  modelling of holobiont evolution, and experimental work with Daphnia to
-  determine microbial contributions to host fitness and to understand
-  host-microbial responses to environmental perturbations. In addition to
-  these areas, I am also actively involved in the application and
-  optimisation of new molecular biology protocols for non-model organisms.
+name: William S. Pearman
+title: Dr
+position: Research Fellow
+employer: University of Auckland
+email: william.pearman@auckland.ac.nz
+website: https://wpearman1996.github.io/
+scholar_id: Gn6BJkoAAAAJ
+scholar_url: https://scholar.google.co.nz/citations?user=Gn6BJkoAAAAJ&hl=en
+github: https://github.com/wpearman1996
+bluesky: https://bsky.app/profile/williampearman.bsky.social
+linkedin: https://www.linkedin.com/in/william-pearman-6b3188392/
+orcid: 0000-0002-7265-8499
+orcid_url: https://orcid.org/0000-0002-7265-8499
+speciality: "I am a broadly trained molecular and microbial ecologist with principal
+  expertise in population genomics and microbial ecology. I specialize in the analysis
+  of community data from microbial communities (either metabarcoding or metagenomics),
+  and in eDNA analysis. My current research explores how host microbiomes influence
+  and interact with their host along both evolutionary and ecological timescales.
+  To undertake this research, I develop eco-evolutionary simulations of microbial
+  communities to develop hypotheses which I then test using observational data and
+  experiments. My research background is a combination of population genomics and
+  microbial ecology, with my current research interests working to align these two
+  fields to understand the evolution of host-microbe relationships. My current work
+  combines eco-evolutionary modelling of holobiont evolution, and experimental work
+  with Daphnia to determine microbial contributions to host fitness and to understand
+  host-microbial responses to environmental perturbations. In addition to these areas,
+  I am also actively involved in the application and optimisation of new molecular
+  biology protocols for non-model organisms.\n\nI'm also interested philosophy of
+  science, and am currently collaborating with philosophers on the value/utility of
+  the holobiont concept, alongside sensible null hypotheses for studying host microbiomes. "
 peer_review:
-  - "Journal of Phycology"
-  - "Journal of Biogeography"
-  - "Molecular Ecology"
-  - "Molecular Ecology Resources"
+- Journal of Phycology
+- Journal of Biogeography
+- Molecular Ecology
+- Molecular Ecology Resources
+- ISME Host-Microbe

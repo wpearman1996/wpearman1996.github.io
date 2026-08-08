@@ -23,6 +23,8 @@ website:
         href: projects.qmd
       - text: "Talks"
         href: talks/index.qmd
+      - text: "Lab"
+        href: lab/index.qmd
       - text: "Recipes"
         href: recipes.qmd
       - text: "CV"

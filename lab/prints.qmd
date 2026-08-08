@@ -1,0 +1,56 @@
+---
+title: "3D Prints"
+description: "Things I've designed and printed for the lab."
+---
+
+```{r setup, include=FALSE}
+uploads_src <- here::here("prints_uploads")
+uploads_dst <- here::here("docs", "prints_uploads")
+if (dir.exists(uploads_src)) {
+  dir.create(uploads_dst, showWarnings = FALSE, recursive = TRUE)
+  invisible(file.copy(list.files(uploads_src, full.names = TRUE), uploads_dst,
+                        recursive = TRUE, overwrite = TRUE))
+}
+
+prints <- yaml::read_yaml(here::here("content", "prints.yml"))
+
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
+render_print <- function(p) {
+  photos_html <- if (length(p$photos) > 0) {
+    imgs <- paste0(
+      '<img src="/', p$photos, '" style="max-width: 260px; max-height: 260px; ',
+      'object-fit: cover; margin: 0 8px 8px 0; border-radius: 6px;">'
+    )
+    paste0('<div style="display: flex; flex-wrap: wrap;">', paste(imgs, collapse = "\n"), "</div>\n\n")
+  } else ""
+
+  model_html <- if (!is.null(p$model_file)) {
+    paste0(
+      "[Download ", p$model_filename %||% "model", "](/", p$model_file, "){.btn .btn-outline-primary .btn-sm}\n\n"
+    )
+  } else ""
+
+  notes_html <- if (!is.null(p$material_notes) && nzchar(trimws(p$material_notes))) {
+    paste0("*", p$material_notes, "*\n\n")
+  } else ""
+
+  paste0(
+    "\n\n## ", p$title, "\n\n",
+    photos_html,
+    p$description %||% "", "\n\n",
+    notes_html,
+    model_html
+  )
+}
+```
+
+```{r}
+#| results: asis
+#| echo: false
+if (length(prints) == 0) {
+  cat("Nothing here yet.\n")
+} else {
+  cat(paste(vapply(prints, render_print, character(1)), collapse = "\n"))
+}
+```

@@ -20,6 +20,14 @@ RECIPES_PATH <- file.path(PROJECT_ROOT, "content", "recipes.yml")
 # committed; only ever read/written locally. See recipes.qmd.
 PROTECTED_RECIPES_PATH <- file.path(PROJECT_ROOT, "content", "recipes_protected.yml")
 PROJECTS_PATH <- file.path(PROJECT_ROOT, "content", "projects.yml")
+PRINTS_PATH <- file.path(PROJECT_ROOT, "content", "prints.yml")
+PRINTS_UPLOADS_DIR <- file.path(PROJECT_ROOT, "prints_uploads")
+
+# Shiny's default 5MB upload cap is fine for photos but too small for
+# 3D model files (STL/3MF exports routinely run tens of MB) -- this app
+# only ever runs locally against the user's own machine, so there's no
+# shared-server resource risk in raising it.
+options(shiny.maxRequestSize = 300 * 1024^2)
 
 CV_ENTRIES_COLS <- c("section", "year", "sort_year", "title", "where", "location",
                       "show_full_cv", "show_onepage_cv", "show_website")
@@ -58,6 +66,20 @@ write_pubs <- function(d) {
 }
 
 blank_to_na <- function(x) if (is.null(x) || !nzchar(trimws(x))) NA_character_ else x
+
+# Avoids silently clobbering an existing file when two uploads share a
+# name (e.g. two photos both called "IMG_0001.jpg" from different phones).
+make_unique_filename <- function(dir, name) {
+  base <- tools::file_path_sans_ext(name)
+  ext <- tools::file_ext(name)
+  candidate <- name
+  i <- 1
+  while (file.exists(file.path(dir, candidate))) {
+    i <- i + 1
+    candidate <- paste0(base, "_", i, if (nzchar(ext)) paste0(".", ext) else "")
+  }
+  candidate
+}
 
 # ---- UI -----------------------------------------------------------------
 
@@ -235,6 +257,63 @@ ui <- fluidPage(
           width = 5
         ),
         mainPanel(width = 7)
+      )
+    ),
+
+    tabPanel("3D Prints",
+      br(),
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("print_select", "Print", choices = NULL),
+          actionButton("print_new", "Add new print", class = "btn-primary"),
+          hr(),
+          textInput("print_title", "Title"),
+          textAreaInput("print_description", "Description", rows = 4, width = "100%"),
+          textAreaInput("print_material_notes", "Print settings / material notes",
+                         rows = 3, width = "100%"),
+          h4("Photos"),
+          uiOutput("print_existing_photos_ui"),
+          fileInput("print_photos_new", "Add photo(s)", multiple = TRUE,
+                     accept = c("image/png", "image/jpeg", "image/webp")),
+          h4("3D model file"),
+          uiOutput("print_existing_model_ui"),
+          fileInput("print_model_new", "Upload / replace model file",
+                     accept = c(".stl", ".3mf", ".obj", ".step", ".stp")),
+          hr(),
+          actionButton("print_save", "Save print", class = "btn-success"),
+          actionButton("print_delete", "Delete print", class = "btn-danger"),
+          width = 5
+        ),
+        mainPanel(width = 7)
+      )
+    ),
+
+    tabPanel("Publish",
+      br(),
+      helpText("Editing here only changes the source files in content/. Nothing",
+                "shows up on the live site until it's rendered and pushed --",
+                "that's what this tab does."),
+      fluidRow(
+        column(6,
+          h4("1. Render"),
+          helpText("Re-renders every page this editor can affect: CV, Metrics,",
+                    "Recipes, Projects. The recipe encryption step only re-runs",
+                    "(~30s) if a protected recipe's content actually changed."),
+          actionButton("render_run", "Render site", class = "btn-primary"),
+          tags$pre(style = "max-height: 300px; overflow-y: auto; background: #f8f8f8;",
+                    verbatimTextOutput("render_log"))
+        ),
+        column(6,
+          h4("2. Review & publish"),
+          actionButton("git_refresh", "Check what changed"),
+          tags$pre(style = "max-height: 200px; overflow-y: auto; background: #f8f8f8;",
+                    verbatimTextOutput("git_status_log")),
+          textAreaInput("commit_message", "Commit message",
+                         value = "Update site content", rows = 2, width = "100%"),
+          actionButton("publish_run", "Commit and push", class = "btn-success"),
+          tags$pre(style = "max-height: 200px; overflow-y: auto; background: #f8f8f8;",
+                    verbatimTextOutput("publish_log"))
+        )
       )
     )
   )
@@ -906,6 +985,243 @@ server <- function(input, output, session) {
     clear_project_form()
     update_project_choices()
     showNotification("Project deleted.", type = "message")
+  })
+
+  # ============================ 3D Prints ================================
+
+  prints_data <- reactiveVal(yaml::read_yaml(PRINTS_PATH))
+  print_editing_slug <- reactiveVal(NULL)
+
+  update_print_choices <- function(select = NULL) {
+    all <- prints_data()
+    names_list <- vapply(all, function(p) p$title, character(1))
+    slugs_list <- vapply(all, function(p) p$slug, character(1))
+    choices <- setNames(slugs_list, names_list)
+    updateSelectInput(session, "print_select", choices = choices, selected = select)
+  }
+  observe(update_print_choices())
+
+  find_print <- function(slug) {
+    if (is.null(slug)) return(NULL)
+    p <- Filter(function(x) x$slug == slug, prints_data())
+    if (length(p) == 1) p[[1]] else NULL
+  }
+
+  clear_print_form <- function() {
+    print_editing_slug(NULL)
+    updateTextInput(session, "print_title", value = "")
+    updateTextAreaInput(session, "print_description", value = "")
+    updateTextAreaInput(session, "print_material_notes", value = "")
+  }
+
+  observeEvent(input$print_new, {
+    clear_print_form()
+    updateSelectInput(session, "print_select", selected = character(0))
+  })
+
+  observeEvent(input$print_select, {
+    req(input$print_select)
+    p <- find_print(input$print_select)
+    req(!is.null(p))
+    print_editing_slug(p$slug)
+    updateTextInput(session, "print_title", value = p$title)
+    updateTextAreaInput(session, "print_description", value = trimws(p$description %||% ""))
+    updateTextAreaInput(session, "print_material_notes", value = trimws(p$material_notes %||% ""))
+  })
+
+  output$print_existing_photos_ui <- renderUI({
+    p <- find_print(print_editing_slug())
+    photos <- unlist(p$photos)
+    if (is.null(p) || length(photos) == 0) return(helpText("No photos yet."))
+    choices <- setNames(photos, basename(photos))
+    checkboxGroupInput("print_keep_photos", NULL, choices = choices, selected = photos)
+  })
+
+  output$print_existing_model_ui <- renderUI({
+    p <- find_print(print_editing_slug())
+    if (is.null(p) || is.null(p$model_file)) return(helpText("No model file yet."))
+    checkboxInput("print_keep_model",
+                   paste0("Keep existing: ", p$model_filename %||% basename(p$model_file)),
+                   value = TRUE)
+  })
+
+  observeEvent(input$print_save, {
+    if (!nzchar(trimws(input$print_title))) {
+      showNotification("Title is required.", type = "error"); return()
+    }
+    all_prints <- prints_data()
+    is_new <- is.null(print_editing_slug())
+
+    if (is_new) {
+      slug <- gsub("^_|_$", "", tolower(gsub("[^a-z0-9]+", "_", tolower(input$print_title))))
+      other_slugs <- vapply(all_prints, function(p) p$slug, character(1))
+      if (slug %in% other_slugs) {
+        showNotification("A print with that (or a very similar) title already exists.", type = "error")
+        return()
+      }
+    } else {
+      slug <- print_editing_slug()
+    }
+
+    dest_dir <- file.path(PRINTS_UPLOADS_DIR, slug)
+    dir.create(dest_dir, showWarnings = FALSE, recursive = TRUE)
+    existing <- find_print(slug)
+
+    # Photos: anything left unchecked gets deleted from disk; anything
+    # newly uploaded gets copied in under its own (de-duplicated) name.
+    existing_photos <- unlist(existing$photos)
+    kept_photos <- input$print_keep_photos %||% character(0)
+    for (rel in setdiff(existing_photos, kept_photos)) {
+      f <- file.path(PROJECT_ROOT, rel)
+      if (file.exists(f)) file.remove(f)
+    }
+    photo_paths <- kept_photos
+    if (!is.null(input$print_photos_new)) {
+      up <- input$print_photos_new
+      for (i in seq_len(nrow(up))) {
+        dest_name <- make_unique_filename(dest_dir, up$name[i])
+        file.copy(up$datapath[i], file.path(dest_dir, dest_name), overwrite = TRUE)
+        photo_paths <- c(photo_paths, file.path("prints_uploads", slug, dest_name))
+      }
+    }
+
+    # Model file: dropped if unchecked, replaced if a new one is uploaded,
+    # otherwise left as-is.
+    keep_model <- isTRUE(input$print_keep_model)
+    model_file <- existing$model_file
+    model_filename <- existing$model_filename
+    if (!is.null(model_file) && !keep_model) {
+      f <- file.path(PROJECT_ROOT, model_file)
+      if (file.exists(f)) file.remove(f)
+      model_file <- NULL; model_filename <- NULL
+    }
+    if (!is.null(input$print_model_new) && nzchar(input$print_model_new$name)) {
+      if (!is.null(model_file)) {
+        f <- file.path(PROJECT_ROOT, model_file)
+        if (file.exists(f)) file.remove(f)
+      }
+      dest_name <- make_unique_filename(dest_dir, input$print_model_new$name)
+      file.copy(input$print_model_new$datapath, file.path(dest_dir, dest_name), overwrite = TRUE)
+      model_file <- file.path("prints_uploads", slug, dest_name)
+      model_filename <- input$print_model_new$name
+    }
+
+    new_entry <- list(
+      title = input$print_title, slug = slug,
+      description = input$print_description,
+      photos = as.list(photo_paths)
+    )
+    if (nzchar(trimws(input$print_material_notes))) new_entry$material_notes <- input$print_material_notes
+    if (!is.null(model_file)) {
+      new_entry$model_file <- model_file
+      new_entry$model_filename <- model_filename
+    }
+
+    all_prints <- if (is_new) {
+      c(all_prints, list(new_entry))
+    } else {
+      lapply(all_prints, function(p) if (p$slug == slug) new_entry else p)
+    }
+    yaml::write_yaml(all_prints, PRINTS_PATH)
+    prints_data(all_prints)
+    print_editing_slug(slug)
+    update_print_choices(select = slug)
+    showNotification("Print saved.", type = "message")
+  })
+
+  observeEvent(input$print_delete, {
+    req(print_editing_slug())
+    slug <- print_editing_slug()
+    all_prints <- Filter(function(p) p$slug != slug, prints_data())
+    yaml::write_yaml(all_prints, PRINTS_PATH)
+    prints_data(all_prints)
+    dest_dir <- file.path(PRINTS_UPLOADS_DIR, slug)
+    if (dir.exists(dest_dir)) unlink(dest_dir, recursive = TRUE)
+    clear_print_form()
+    update_print_choices()
+    showNotification("Print deleted.", type = "message")
+  })
+
+  # ============================ Publish ==================================
+
+  # Absolute paths passed to quarto/git rather than setwd()-ing -- this
+  # app's own working directory is admin/ (see PROJECT_ROOT above), and
+  # `quarto render <path>` / `git -C <path>` both work from anywhere,
+  # so there's no need to juggle the process's cwd mid-session.
+  RENDER_TARGETS <- c("cv.qmd", "metrics.qmd", "recipes.qmd", "projects.qmd", "lab/prints.qmd")
+  # Everything this editor can write to. docs/ covers every rendered
+  # output file; prints_uploads/ holds the actual photo/model files (the
+  # lab/prints.qmd render step copies them into docs/ itself, but the
+  # source copies here still need to reach git); content/recipes_protected.yml
+  # is deliberately excluded since it's gitignored (see recipes.qmd) and
+  # `git add` on a path git already ignores is a silent no-op, not an error.
+  PUBLISH_PATHS <- c(
+    "content/cv_entries.csv", "content/pubs.csv", "content/cv_meta.yml",
+    "content/recipes.yml", "content/projects.yml", "content/prints.yml",
+    "prints_uploads", "docs"
+  )
+
+  render_log <- reactiveVal("Click \"Render site\" to rebuild the pages this editor can affect.")
+  git_status_log <- reactiveVal("Click \"Check what changed\" to see the pending diff.")
+  publish_log <- reactiveVal("")
+
+  output$render_log <- renderText(render_log())
+  output$git_status_log <- renderText(git_status_log())
+  output$publish_log <- renderText(publish_log())
+
+  refresh_git_status <- function() {
+    out <- system2("git", c("-C", PROJECT_ROOT, "status", "--short"), stdout = TRUE, stderr = TRUE)
+    git_status_log(if (length(out) == 0) {
+      "Nothing to publish -- working tree matches the last commit."
+    } else {
+      paste(out, collapse = "\n")
+    })
+  }
+
+  observeEvent(input$render_run, {
+    render_log("Rendering...")
+    chunks <- lapply(RENDER_TARGETS, function(page) {
+      path <- file.path(PROJECT_ROOT, page)
+      out <- system2("quarto", c("render", path), stdout = TRUE, stderr = TRUE)
+      status <- attr(out, "status") %||% 0
+      paste0(
+        "== ", page, if (!identical(status, 0L) && !identical(status, 0)) " (FAILED)" else "", " ==\n",
+        paste(out, collapse = "\n")
+      )
+    })
+    render_log(paste(chunks, collapse = "\n\n"))
+    refresh_git_status()
+    showNotification("Render finished -- check the log for errors before publishing.", type = "message")
+  })
+
+  observeEvent(input$git_refresh, refresh_git_status())
+
+  observeEvent(input$publish_run, {
+    if (!nzchar(trimws(input$commit_message))) {
+      showNotification("Commit message is required.", type = "error"); return()
+    }
+    existing_paths <- PUBLISH_PATHS[file.exists(file.path(PROJECT_ROOT, PUBLISH_PATHS))]
+    add_out <- system2("git", c("-C", PROJECT_ROOT, "add", existing_paths), stdout = TRUE, stderr = TRUE)
+
+    staged <- system2("git", c("-C", PROJECT_ROOT, "diff", "--cached", "--stat"), stdout = TRUE, stderr = TRUE)
+    if (length(staged) == 0) {
+      publish_log("Nothing staged -- nothing to commit.")
+      showNotification("Nothing to publish.", type = "warning")
+      return()
+    }
+
+    commit_out <- system2(
+      "git", c("-C", PROJECT_ROOT, "commit", "-m", shQuote(input$commit_message)),
+      stdout = TRUE, stderr = TRUE
+    )
+    push_out <- system2("git", c("-C", PROJECT_ROOT, "push"), stdout = TRUE, stderr = TRUE)
+
+    publish_log(paste(
+      c("== staged ==", staged, "", "== commit ==", commit_out, "", "== push ==", push_out),
+      collapse = "\n"
+    ))
+    refresh_git_status()
+    showNotification("Published.", type = "message")
   })
 
 }
