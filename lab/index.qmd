@@ -19,7 +19,7 @@ file.copy(here::here("platelight.html"), here::here("docs", "platelight.html"), 
 
 A touchscreen well-plate illuminator for guiding pipetting by hand -- lights up the target well so you can find it without squinting at a plate map. Runs entirely in the browser, fullscreen, on a tablet propped next to the plate.
 
-[Open PlateLight](platelight.html){.btn .btn-primary target="_blank"}
+[Open PlateLight](/platelight.html){.btn .btn-primary target="_blank"}
 
 ## 3D Prints
 
