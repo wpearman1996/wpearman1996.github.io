@@ -1,1 +1,15 @@
-[]
+- title: Magnetic Rack - 1.7/2mL tube
+  slug: magnetic_rack_1_7_2ml_tube
+  description: magnetic rack for DNA isolation/purification - uses 48 8mm diameter,
+    5mm thick neodymium magnets. Requires 4 M3 bolts ~10mm long and threaded inserts
+    for these.
+  photos: []
+  model_file: prints_uploads/magnetic_rack_1_7_2ml_tube/magnet_rack_2ml_1_7ml.stl
+  model_filename: magnet_rack_2ml_1_7ml.stl
+- title: PCR Strip tube magnetic rack
+  slug: pcr_strip_tube_magnetic_rack
+  description: Magnetic rack for PCR strip tubes - requires 4x M3 bolts ~5mm, M3 threaded
+    inserts, and 6mm diameter, and ~2mm thick magnets
+  photos: []
+  model_file: prints_uploads/pcr_strip_tube_magnetic_rack/pcr_strip_magnet_rack.stl
+  model_filename: pcr_strip_magnet_rack.stl

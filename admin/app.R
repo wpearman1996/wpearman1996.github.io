@@ -29,6 +29,11 @@ PRINTS_UPLOADS_DIR <- file.path(PROJECT_ROOT, "prints_uploads")
 # shared-server resource risk in raising it.
 options(shiny.maxRequestSize = 300 * 1024^2)
 
+# Lets the editor show actual photo thumbnails (from prints_uploads/,
+# outside Shiny's default www/ root) while a print is being edited.
+dir.create(PRINTS_UPLOADS_DIR, showWarnings = FALSE, recursive = TRUE)
+addResourcePath("prints_uploads", PRINTS_UPLOADS_DIR)
+
 CV_ENTRIES_COLS <- c("section", "year", "sort_year", "title", "where", "location",
                       "show_full_cv", "show_onepage_cv", "show_website")
 PUBS_COLS <- c("index", "year", "authors", "title", "journal", "volume", "pages", "doi",
@@ -284,7 +289,11 @@ ui <- fluidPage(
           actionButton("print_delete", "Delete print", class = "btn-danger"),
           width = 5
         ),
-        mainPanel(width = 7)
+        mainPanel(
+          h4("Preview"),
+          uiOutput("print_preview"),
+          width = 7
+        )
       )
     ),
 
@@ -992,6 +1001,21 @@ server <- function(input, output, session) {
   prints_data <- reactiveVal(yaml::read_yaml(PRINTS_PATH))
   print_editing_slug <- reactiveVal(NULL)
 
+  # Existing photos are tracked the same way recipe ingredients are: a
+  # reactiveVal-backed list of ids, each with its own remove button that
+  # mutates that list directly -- not, as an earlier version did, a
+  # single checkboxGroupInput pre-populated with `selected`. That looked
+  # fine in the browser, but a dynamically-created input's initial value
+  # doesn't reliably reach the server before Save fires, and reading a
+  # not-yet-arrived value as "nothing selected" silently deleted every
+  # existing photo (and, via the same checkbox pattern, the model file)
+  # on a plain no-op edit. Same reasoning for the model file below, just
+  # with a single remove button instead of a list.
+  print_photo_ids <- reactiveVal(integer(0))
+  print_photo_paths <- reactiveVal(list())
+  print_photo_counter <- reactiveVal(0)
+  print_model_removed <- reactiveVal(FALSE)
+
   update_print_choices <- function(select = NULL) {
     all <- prints_data()
     names_list <- vapply(all, function(p) p$title, character(1))
@@ -1007,11 +1031,21 @@ server <- function(input, output, session) {
     if (length(p) == 1) p[[1]] else NULL
   }
 
+  set_print_photo_rows <- function(paths) {
+    n <- length(paths)
+    ids <- if (n == 0) integer(0) else (print_photo_counter() + 1):(print_photo_counter() + n)
+    print_photo_counter(print_photo_counter() + n)
+    print_photo_paths(stats::setNames(as.list(paths), as.character(ids)))
+    print_photo_ids(ids)
+  }
+
   clear_print_form <- function() {
     print_editing_slug(NULL)
     updateTextInput(session, "print_title", value = "")
     updateTextAreaInput(session, "print_description", value = "")
     updateTextAreaInput(session, "print_material_notes", value = "")
+    set_print_photo_rows(character(0))
+    print_model_removed(FALSE)
   }
 
   observeEvent(input$print_new, {
@@ -1027,26 +1061,72 @@ server <- function(input, output, session) {
     updateTextInput(session, "print_title", value = p$title)
     updateTextAreaInput(session, "print_description", value = trimws(p$description %||% ""))
     updateTextAreaInput(session, "print_material_notes", value = trimws(p$material_notes %||% ""))
+    set_print_photo_rows(unlist(p$photos))
+    print_model_removed(FALSE)
   })
 
   output$print_existing_photos_ui <- renderUI({
-    p <- find_print(print_editing_slug())
-    photos <- unlist(p$photos)
-    if (is.null(p) || length(photos) == 0) return(helpText("No photos yet."))
-    choices <- setNames(photos, basename(photos))
-    checkboxGroupInput("print_keep_photos", NULL, choices = choices, selected = photos)
+    ids <- print_photo_ids()
+    if (length(ids) == 0) return(helpText("No existing photos."))
+    vals <- isolate(print_photo_paths())
+    tagList(lapply(ids, function(id) {
+      path <- vals[[as.character(id)]]
+      fluidRow(
+        column(3, tags$img(src = paste0("/", path), style = "max-width:100%; border-radius:4px;")),
+        column(6, div(basename(path), style = "font-size:12px; color:#666; padding-top:10px;")),
+        column(3, actionButton(paste0("print_photo_remove_", id), "Remove", class = "btn-sm"))
+      )
+    }))
+  })
+
+  observe({
+    lapply(print_photo_ids(), function(id) {
+      btn <- paste0("print_photo_remove_", id)
+      observeEvent(input[[btn]], {
+        print_photo_ids(setdiff(print_photo_ids(), id))
+      }, ignoreInit = TRUE, once = TRUE)
+    })
   })
 
   output$print_existing_model_ui <- renderUI({
     p <- find_print(print_editing_slug())
-    if (is.null(p) || is.null(p$model_file)) return(helpText("No model file yet."))
-    checkboxInput("print_keep_model",
-                   paste0("Keep existing: ", p$model_filename %||% basename(p$model_file)),
-                   value = TRUE)
+    if (is.null(p) || is.null(p$model_file) || print_model_removed()) {
+      return(helpText("No model file attached."))
+    }
+    fluidRow(
+      column(9, paste0("Current: ", p$model_filename %||% basename(p$model_file))),
+      column(3, actionButton("print_model_remove", "Remove", class = "btn-sm"))
+    )
+  })
+
+  observeEvent(input$print_model_remove, print_model_removed(TRUE))
+
+  output$print_preview <- renderUI({
+    ids <- print_photo_ids()
+    vals <- print_photo_paths()
+    photo_tags <- lapply(ids, function(id) {
+      tags$img(src = paste0("/", vals[[as.character(id)]]),
+                style = "max-width:140px; max-height:140px; margin:4px; border-radius:4px;")
+    })
+    p_existing <- find_print(print_editing_slug())
+    model_text <- if (!is.null(input$print_model_new) && nzchar(input$print_model_new$name)) {
+      paste0("Model file: ", input$print_model_new$name, " (newly uploaded, not yet saved)")
+    } else if (!print_model_removed() && !is.null(p_existing$model_file)) {
+      paste0("Model file: ", p_existing$model_filename %||% basename(p_existing$model_file))
+    } else {
+      "No model file."
+    }
+    tagList(
+      h5(if (nzchar(input$print_title %||% "")) input$print_title else "(untitled)"),
+      div(style = "display:flex; flex-wrap:wrap;", photo_tags),
+      p(input$print_description),
+      if (nzchar(trimws(input$print_material_notes %||% ""))) tags$em(input$print_material_notes) else NULL,
+      p(model_text)
+    )
   })
 
   observeEvent(input$print_save, {
-    if (!nzchar(trimws(input$print_title))) {
+    if (!nzchar(trimws(input$print_title %||% ""))) {
       showNotification("Title is required.", type = "error"); return()
     }
     all_prints <- prints_data()
@@ -1067,10 +1147,11 @@ server <- function(input, output, session) {
     dir.create(dest_dir, showWarnings = FALSE, recursive = TRUE)
     existing <- find_print(slug)
 
-    # Photos: anything left unchecked gets deleted from disk; anything
-    # newly uploaded gets copied in under its own (de-duplicated) name.
+    # Photos: whatever's still in print_photo_ids() (after any Remove
+    # clicks) is what's kept; anything that used to be attached but
+    # isn't in that list anymore gets deleted from disk.
     existing_photos <- unlist(existing$photos)
-    kept_photos <- input$print_keep_photos %||% character(0)
+    kept_photos <- unlist(print_photo_paths()[as.character(print_photo_ids())])
     for (rel in setdiff(existing_photos, kept_photos)) {
       f <- file.path(PROJECT_ROOT, rel)
       if (file.exists(f)) file.remove(f)
@@ -1085,12 +1166,11 @@ server <- function(input, output, session) {
       }
     }
 
-    # Model file: dropped if unchecked, replaced if a new one is uploaded,
-    # otherwise left as-is.
-    keep_model <- isTRUE(input$print_keep_model)
+    # Model file: removed if the Remove button was clicked, replaced if
+    # a new one was uploaded, otherwise carried over unchanged.
     model_file <- existing$model_file
     model_filename <- existing$model_filename
-    if (!is.null(model_file) && !keep_model) {
+    if (!is.null(model_file) && print_model_removed()) {
       f <- file.path(PROJECT_ROOT, model_file)
       if (file.exists(f)) file.remove(f)
       model_file <- NULL; model_filename <- NULL
@@ -1111,7 +1191,7 @@ server <- function(input, output, session) {
       description = input$print_description,
       photos = as.list(photo_paths)
     )
-    if (nzchar(trimws(input$print_material_notes))) new_entry$material_notes <- input$print_material_notes
+    if (nzchar(trimws(input$print_material_notes %||% ""))) new_entry$material_notes <- input$print_material_notes
     if (!is.null(model_file)) {
       new_entry$model_file <- model_file
       new_entry$model_filename <- model_filename
@@ -1126,6 +1206,8 @@ server <- function(input, output, session) {
     prints_data(all_prints)
     print_editing_slug(slug)
     update_print_choices(select = slug)
+    set_print_photo_rows(photo_paths)
+    print_model_removed(FALSE)
     showNotification("Print saved.", type = "message")
   })
 
